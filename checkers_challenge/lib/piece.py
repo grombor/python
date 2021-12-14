@@ -1,14 +1,19 @@
 class Piece:
     """ A class for pieces. """
 
-    def __init__(self, x, y, color="white", is_king=False):
-        self.x = x
-        self.y = y
-        self.color = color
-        self.is_king = is_king
+    def __init__(self, x, y, white=False, is_king=False, jump=False, direction=False, active=True):
+        self.x = x                          # The X position of the piece on the board
+        self.y = y                          # The Y position of the piece on the board
+        self.is_white = white               # The color of the piece
+        self.is_king = is_king              # If True, it means that the piece reach the king row and become kinged
+        self.has_jump = jump                # If True the piece has to jump
+        self.move_direction = direction     # need idea here (2-4 directions of movement here)
+        self.is_active = active             # If True means the piece in game
     
+    # function made for debugging only
     def __str__(self):
-        return f"A standard {self.color} checkers piece"
+        return f"This piece is:\nat position x: {self.x} y: {self.y}\nwhite color: {self.is_white}\nkinged: {self.is_king}\nhas to jump:{self.has_jump}\nmoving direction: {self.move_direction}\nin game: {self.is_active}"
 
+    # Moving function prototype
     def move(self):
         return f"moving piece to {self.x}, {self.y}"
