@@ -24,18 +24,22 @@ class Piece:
         return print(f"moving piece to {x}, {y}")
 
     
-    def symbol(self):
+    def draw(self):
+        """ Assigns symbols to pieces depend on color (white or not) and status (king of men) """
+
         global piece_symbol
         if self.is_white: 
-            if not self.is_king:
-                piece_symbol = "\u26c0"
-            else:
-                piece_symbol = "\u26c1"
+            # if not self.is_king:
+            #     piece_symbol = "\u26c0"
+            # else:
+            #     piece_symbol = "\u26c1"
+            piece_symbol = "\u26c1" if self.is_king else "\u26c0"
         if not self.is_white:
-            if not self.is_king:
-                piece_symbol = "\u26c2"
-            else:
-                piece_symbol = "\u26c3"
+            # if not self.is_king:
+            #     piece_symbol = "\u26c2"
+            # else:
+            #     piece_symbol = "\u26c3"
+            piece_symbol = "\u26c3" if self.is_king else "\u26c2"
         return piece_symbol
         
 
