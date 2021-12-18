@@ -17,38 +17,31 @@ white_pieces_list = []
 black_pieces_list = []
 
 # The idea is:
-# pieces_list = [white_pieces_list, black_pieces_list]
+# board = [white_pieces_list, puste_rzedy, black_pieces_list]
 
-def generate_pieces(color):
-    if color == "white":
-        for i in range(1,9,2):
-            p0 = piece.Piece(1, i, True)
-            white_pieces_list.append(p0)
-        for i in range(2,9,2):
-            p0 = piece.Piece(2, i, True)
-            white_pieces_list.append(p0)
-        for i in range(1,9,2):
-            p0 = piece.Piece(3, i, True)
-            white_pieces_list.append(p0)
-    if color != "white":
-        for i in range(2,9,2):
-            p0 = piece.Piece(6, i, False)
-            black_pieces_list.append(p0)
-        for i in range(1,9,2):
-            p0 = piece.Piece(7, i, False)
-            black_pieces_list.append(p0)
-        for i in range(2,9,2):
-            p0 = piece.Piece(8, i, False)
-            black_pieces_list.append(p0)
+row1, row2, row3, row4, row5, row6, row7, row8 = [],[],[],[],[],[],[],[]
+board = [
+    row1, 
+    row2,
+    row3,
+    row4,
+    row5,
+    row6,
+    row7,
+    row8
+    ]
 
-generate_pieces("white")
-generate_pieces("bla")
+def generate_pieces(is_white):
+    for row in board:
+        for i in range(0,8):
+            # p0 = piece.Piece(is_white)
+            # row.append(p0)
+            row.append("\u2b1c")
+            row.append("\u2b1b")
+                
 
-print (f"############ WHITE ##############")
-for l in white_pieces_list:
-    print(l)
+generate_pieces(True)
 
-print (f"############ BLACK ##############")
-
-for b in black_pieces_list:
-    print(b)
+for row in board:
+    for r in row:
+        print(r)
