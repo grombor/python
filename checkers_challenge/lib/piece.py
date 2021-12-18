@@ -4,7 +4,7 @@ class Piece:
     piece_symbol = ""
 
 
-    def __init__(self, x, y, white=False, is_king=False, jump=False, direction=False, active=True):
+    def __init__(self, x=0, y=0, white=False, is_king=False, jump=False, direction=False, active=True):
         self.x = x                          # The X position of the piece on the board
         self.y = y                          # The Y position of the piece on the board
         self.is_white = white               # The color of the piece
@@ -16,7 +16,22 @@ class Piece:
     
     # function made for debugging only
     def __str__(self):
-        return f"This piece is:\nat position x: {self.x} y: {self.y}\nwhite color: {self.is_white}\nkinged: {self.is_king}\nhas to jump:{self.has_jump}\nmoving direction: {self.move_direction}\nin game: {self.is_active}"
+        """ Assigns symbols to pieces depend on color (white or not) and status (king of men) """
+
+        global piece_symbol
+        if self.is_white: 
+            # if not self.is_king:
+            #     piece_symbol = "\u26c0"
+            # else:
+            #     piece_symbol = "\u26c1"
+            piece_symbol = "\u26c1" if self.is_king else "\u26c2"
+        if not self.is_white:
+            # if not self.is_king:
+            #     piece_symbol = "\u26c2"
+            # else:
+            #     piece_symbol = "\u26c3"
+            piece_symbol = "\u26c3" if self.is_king else "\u26c0"
+        return piece_symbol
 
     
     # Moving function prototype
@@ -40,6 +55,6 @@ class Piece:
             # else:
             #     piece_symbol = "\u26c3"
             piece_symbol = "\u26c3" if self.is_king else "\u26c2"
-        return piece_symbol
+        return print(piece_symbol)
         
 
