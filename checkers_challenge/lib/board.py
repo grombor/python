@@ -3,6 +3,8 @@ from .piece import Piece
 # Checkers board is a list of 8 rows list
 board = []
 
+
+# Generates new game board
 def generate_pieces():
     
     # Temporary list of 4 pieces and 4 white fields
@@ -14,8 +16,12 @@ def generate_pieces():
         temp.append(new_piece)
         temp.append("\u2b1c")
 
+    # Add row to the board
     board.append(temp)
+    
+    # Clear temp
     temp = []
+
 
     # Generate 2nd line of white
     for field in range(2,9,2):
@@ -23,8 +29,12 @@ def generate_pieces():
         temp.append("\u2b1c")
         temp.append(new_piece)
 
+    # Add row to the board
     board.append(temp)
+    
+    # Clear temp
     temp = []
+
 
     # Generate 3nd line of white
     for field in range(1,9,2):
@@ -32,24 +42,36 @@ def generate_pieces():
         temp.append(new_piece)
         temp.append("\u2b1c")
 
+    # Add row to the board
     board.append(temp)
+    
+    # Clear temp
     temp = []
+
 
     # Generate 1st line of empty middle rows
     for field in range(2,9,2):
         temp.append("\u2b1c")
         temp.append(" ")
 
+    # Add row to the board
     board.append(temp)
+    
+    # Clear temp
     temp = []
+
 
     # Generate 2nd line of empty middle rows
     for field in range(1,9,2):
         temp.append(" ")
         temp.append("\u2b1c")
 
+    # Add row to the board
     board.append(temp)
+    
+    # Clear temp
     temp = []
+
 
     # Generate 1st line of black
     for field in range(2,9,2):
@@ -57,8 +79,12 @@ def generate_pieces():
         temp.append("\u2b1c")
         temp.append(new_piece)
 
+    # Add row to the board
     board.append(temp)
+    
+    # Clear temp
     temp = []       
+
 
     # Generate 2nd line of black
     for field in range(1,9,2):
@@ -66,8 +92,12 @@ def generate_pieces():
         temp.append(new_piece)
         temp.append("\u2b1c")
 
+    # Add row to the board
     board.append(temp)
+    
+    # Clear temp
     temp = []       
+
 
     # Generate 3nd line of black
     for field in range(2,9,2):
@@ -75,10 +105,21 @@ def generate_pieces():
         temp.append("\u2b1c")
         temp.append(new_piece)
 
+    # Add row to the board
     board.append(temp)
+    
+    # Clear temp
     temp = []       
 
 
+
+# Prints board on the screen
 def print_board():
     for rows in board:
         print(*rows)
+
+
+# Generates a board after each turn
+def set_board(new_board):
+    global board
+    board = new_board.copy()

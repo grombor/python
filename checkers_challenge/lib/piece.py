@@ -14,22 +14,14 @@ class Piece:
         self.is_active = active             # If True means the piece in game
 
     
-    # function made for debugging only
+    # function made for easy print of the pieces
     def __str__(self):
         """ Assigns symbols to pieces depend on color (white or not) and status (king of men) """
 
         global piece_symbol
         if self.is_white: 
-            # if not self.is_king:
-            #     piece_symbol = "\u26c0"
-            # else:
-            #     piece_symbol = "\u26c1"
             piece_symbol = "\u26c1" if self.is_king else "\u26c2"
         if not self.is_white:
-            # if not self.is_king:
-            #     piece_symbol = "\u26c2"
-            # else:
-            #     piece_symbol = "\u26c3"
             piece_symbol = "\u26c3" if self.is_king else "\u26c0"
         return piece_symbol
 
@@ -44,16 +36,8 @@ class Piece:
 
         global piece_symbol
         if self.is_white: 
-            # if not self.is_king:
-            #     piece_symbol = "\u26c0"
-            # else:
-            #     piece_symbol = "\u26c1"
             piece_symbol = "\u26c1" if self.is_king else "\u26c0"
         if not self.is_white:
-            # if not self.is_king:
-            #     piece_symbol = "\u26c2"
-            # else:
-            #     piece_symbol = "\u26c3"
             piece_symbol = "\u26c3" if self.is_king else "\u26c2"
         return print(piece_symbol)
         
