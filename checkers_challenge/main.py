@@ -1,11 +1,11 @@
-from lib import piece
+from lib.piece import Piece
 
-p1 = piece.Piece(1,1)
+p1 = Piece(1,1)
 
 # print(p1.__str__())
 
-p1.move(1,2)
-p1.draw()
+# p1.move(1,2)
+# p1.draw()
 
 # print("\u250c\u2500\u2500\u2500\u2500\u2510",
 #     f"\n\u2502{p1.draw()} \u2b1c\u2502",
@@ -19,29 +19,86 @@ black_pieces_list = []
 # The idea is:
 # board = [white_pieces_list, puste_rzedy, black_pieces_list]
 
-row1, row2, row3, row4, row5, row6, row7, row8 = [],[],[],[],[],[],[],[]
-board = [
-    row1, 
-    row2,
-    row3,
-    row4,
-    row5,
-    row6,
-    row7,
-    row8
-    ]
+board = []
 
-def generate_pieces(is_white):
-    for row in board:
-        for i in range(0,8):
-            # p0 = piece.Piece(is_white)
-            # row.append(p0)
-            row.append("\u2b1c")
-            row.append("\u2b1b")
+def generate_pieces():
+    
+    # Temporary list of 4 pieces and 4 white fields
+    temp = []
+
+    # Generate 1st line of white
+    for field in range(1,9,2):
+        new_piece = Piece(field,1,True)
+        temp.append(new_piece)
+        temp.append("\u2b1c")
+
+    board.append(temp)
+    temp = []
+
+    # Generate 2nd line of white
+    for field in range(2,9,2):
+        new_piece = Piece(field,2,True)
+        temp.append("\u2b1c")
+        temp.append(new_piece)
+
+    board.append(temp)
+    temp = []
+
+    # Generate 3nd line of white
+    for field in range(1,9,2):
+        new_piece = Piece(field,3,True)
+        temp.append(new_piece)
+        temp.append("\u2b1c")
+
+    board.append(temp)
+    temp = []
+
+    # Generate 1st line of empty middle rows
+    for field in range(2,9,2):
+        temp.append("\u2b1c")
+        temp.append(" ")
+
+    board.append(temp)
+    temp = []
+
+    # Generate 2nd line of empty middle rows
+    for field in range(1,9,2):
+        temp.append(" ")
+        temp.append("\u2b1c")
+
+    board.append(temp)
+    temp = []
+
+    # Generate 1st line of black
+    for field in range(2,9,2):
+        new_piece = Piece(field,6,False)
+        temp.append("\u2b1c")
+        temp.append(new_piece)
+
+    board.append(temp)
+    temp = []       
+
+    # Generate 2nd line of black
+    for field in range(1,9,2):
+        new_piece = Piece(field,7,False)
+        temp.append(new_piece)
+        temp.append("\u2b1c")
+
+    board.append(temp)
+    temp = []       
+
+    # Generate 3nd line of black
+    for field in range(2,9,2):
+        new_piece = Piece(field,8,False)
+        temp.append("\u2b1c")
+        temp.append(new_piece)
+
+    board.append(temp)
+    temp = []       
+
                 
 
-generate_pieces(True)
+generate_pieces()
 
-for row in board:
-    for r in row:
-        print(r)
+for rows in board:
+    print(*rows)
