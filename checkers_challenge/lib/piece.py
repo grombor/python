@@ -4,7 +4,7 @@ class Piece:
     piece_symbol = ""
 
 
-    def __init__(self, x=0, y=0, white=False, is_king=False, jump=False, direction=False, active=True):
+    def __init__(self, x=0, y=0, white=False, direction=False, is_king=False, jump=False, active=True):
         self.x = x
         self.y = y
         self.is_white = white               # The color of the piece
@@ -27,7 +27,7 @@ class Piece:
 
     
     # Moving function prototype
-    def move(self, x, y):
+    def set_xy(self, x, y):
         return print(f"moving piece to {x}, {y}")
 
     
