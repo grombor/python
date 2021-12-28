@@ -1,4 +1,4 @@
-from lib.board import board_loop, generate_pieces, print_board, set_board
+from lib.board import board_loop, generate_pieces, print_board, set_board, board
 
 if __name__ == "__main__":
     generate_pieces()
@@ -13,4 +13,9 @@ if __name__ == "__main__":
     # Test: print a new board
     # print_board()
 
+    row = board[0]
+    column = row[0]
+
     board_loop(True)
+
+    column.get_moves()

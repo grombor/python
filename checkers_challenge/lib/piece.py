@@ -4,7 +4,7 @@ class Piece:
     piece_symbol = ""
 
 
-    def __init__(self, x=0, y=0, white=False, direction=False, is_king=False, jump=False, active=True):
+    def __init__(self, x=0, y=0, white=False, direction=False, is_king=False, jump=False, active=True, moves=[]):
         self.x = x
         self.y = y
         self.is_white = white               # The color of the piece
@@ -12,6 +12,7 @@ class Piece:
         self.has_jump = jump                # If True the piece has to jump
         self.move_direction = direction     # need idea here (2-4 directions of movement here) maybe 'L'eft - 'R'ight; 'U'p - 'D'Down
         self.is_active = active             # If True means the piece in game
+        self.moves = moves                  # The list with all allowed moves
 
     
     # function made for easy print of the pieces
@@ -40,5 +41,17 @@ class Piece:
         if not self.is_white:
             piece_symbol = "\u26c3" if self.is_king else "\u26c2"
         return print(piece_symbol)
+
+
+    # Prints list with all possible moves
+    def get_moves(self):
+        print("moves list here:")
+        for move in self.moves:
+            print(*move)
+
+
+    # Sets moves list
+    def set_moves(self, move_list):
+        self.moves = move_list.copy()
         
 
