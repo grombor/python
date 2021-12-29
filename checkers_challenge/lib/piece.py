@@ -28,10 +28,16 @@ class Piece:
 
     
     # Moving function prototype
-    def set_xy(self, x, y):
-        return print(f"moving piece to {x}, {y}")
+    # Update location of piece
+    def move(self, y, x):
+        #row = board[self.y]
+        #row[x] = " "
+        self.x = x
+        self.y = y
+        #row = board[y]
+        #row[x] = 
+        
 
-    
     def draw(self):
         """ Assigns symbols to pieces depend on color (white or not) and status (king of men) """
 

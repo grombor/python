@@ -11,8 +11,8 @@ def generate_pieces():
     temp = []
 
     # Generate 1st line of white
-    for field in range(1,9,2):
-        new_piece = Piece(field, 1, True, "d")
+    for field in range(0,8,2):
+        new_piece = Piece(field, 0, True, "d")
         temp.append(new_piece)
         temp.append("\u2b1c")
 
@@ -24,8 +24,8 @@ def generate_pieces():
 
 
     # Generate 2nd line of white
-    for field in range(2,9,2):
-        new_piece = Piece(field, 2, True, "d")
+    for field in range(1,8,2):
+        new_piece = Piece(field, 1, True, "d")
         temp.append("\u2b1c")
         temp.append(new_piece)
 
@@ -37,8 +37,8 @@ def generate_pieces():
 
 
     # Generate 3nd line of white
-    for field in range(1,9,2):
-        new_piece = Piece(field, 3, True, "d")
+    for field in range(0,8,2):
+        new_piece = Piece(field, 2, True, "d")
         temp.append(new_piece)
         temp.append("\u2b1c")
 
@@ -74,8 +74,8 @@ def generate_pieces():
 
 
     # Generate 1st line of black
-    for field in range(2, 9, 2):
-        new_piece = Piece(field, 6, False, "u")
+    for field in range(1, 9, 2):
+        new_piece = Piece(field, 5, False, "u")
         temp.append("\u2b1c")
         temp.append(new_piece)
 
@@ -87,8 +87,8 @@ def generate_pieces():
 
 
     # Generate 2nd line of black
-    for field in range(1, 9, 2):
-        new_piece = Piece(field, 7, False, "u")
+    for field in range(0, 8, 2):
+        new_piece = Piece(field, 6, False, "u")
         temp.append(new_piece)
         temp.append("\u2b1c")
 
@@ -100,8 +100,8 @@ def generate_pieces():
 
 
     # Generate 3nd line of black
-    for field in range(2, 9, 2):
-        new_piece = Piece(field, 8, False, "u")
+    for field in range(1, 9, 2):
+        new_piece = Piece(field, 7, False, "u")
         temp.append("\u2b1c")
         temp.append(new_piece)
 
@@ -109,7 +109,23 @@ def generate_pieces():
     board.append(temp)
     
     # Clear temp
-    temp = []       
+    temp = []
+
+
+def piece_move(piece, y, x):
+    
+    # Put piece at the new position
+    board[y][x] = piece
+    
+    # Remove piece from old position
+    piece_previous_x = piece.x
+    piece_previous_y = piece.y
+    board[piece_previous_y][piece_previous_x] = " "
+    
+    # Set new x and y for piece
+    piece.x = x
+    piece.y = y
+    
 
 
 

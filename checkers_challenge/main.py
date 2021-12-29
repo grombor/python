@@ -1,21 +1,27 @@
-from lib.board import board_loop, generate_pieces, print_board, set_board, board
+from lib.board import board_loop, piece_move, generate_pieces, print_board, set_board, board
 
 if __name__ == "__main__":
+
     generate_pieces()
-    # print_board()
+    print_board()
 
-    # Test: make a new board
-    # new_board = [["\u2b50", "\u2b50"], ["\u2b50", "\u2b50"]]
+    # pionek
+    # zmienna popnka z 2,0
+    piece = board[2][0]
+    # print(piece)
+    print(piece.y, piece.x, piece.is_white)
+    # end pionke
 
-    # Test: set up new board
-    # set_board(new_board)
+    print("\n####### tura 1 #############\n")
+    piece_move(piece, 3, 1)
+    print_board()
+    print(piece.y, piece.x, piece.is_white)
+    
 
-    # Test: print a new board
-    # print_board()
 
-    row = board[0]
-    column = row[0]
-
-    board_loop(True)
-
-    column.get_moves()
+    print("\n####### tura 2 #############\n")
+    piece_move(piece, 4, 0)
+    print_board()
+    print(piece.y, piece.x, piece.is_white)
+    
+   
