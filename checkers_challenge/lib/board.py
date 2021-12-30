@@ -144,6 +144,8 @@ def set_board(new_board):
 # Loop iterating through all pieces from most distant to the nearest row.
 # if is_white = True => means its white turn
 def board_loop(is_white):
+        
+    all_possible_moves = []
 
     # Checks all possible moves for piece, return list where sublist is [priority, y, x]
     # move_direction = 1 --> move down
@@ -199,9 +201,17 @@ def board_loop(is_white):
         # Returns possible moves list
         return next_move
 
-    def make_move(piece):
-        # Move the piece to new position
-        pass
+    def make_move(piece, move_list):
+
+        # If piece has move
+        if len(move_list)>0:
+            # Add move to global moves list
+            for move in move_list:
+                new_move = [move, piece]
+                all_possible_moves.append(new_move)
+                print(f"all_possible_moves list: {all_possible_moves}")
+        # sort list by priority now
+        # pick first from all_possible_moves as choosen move    
 
     # Function is iterating piece by piece
     def fields_loop():
@@ -216,7 +226,11 @@ def board_loop(is_white):
                     if piece.is_white:
 
                         # ckeck all possible moves
+                        print(f"checkin moves for piece: {piece.y}:{piece.x}")
                         check_move(piece, 1)
+                        if len(check_move(piece, 1))>0:
+                            print(f"possible move(s): {check_move(piece, 1)}")
+                            make_move(piece, check_move(piece,1))
                         
 
                     # Instructions for black pieces, still TODO

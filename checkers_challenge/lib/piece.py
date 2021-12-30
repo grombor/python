@@ -27,7 +27,6 @@ class Piece:
         return piece_symbol
 
     
-    # Moving function prototype
     # Update location of piece
     def move(self, y, x):
         self.x = x
