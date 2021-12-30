@@ -142,67 +142,65 @@ def set_board(new_board):
 
 
 # Loop iterating through all pieces from most distant to the nearest row.
+# if is_white = True => means its white turn
 def board_loop(is_white):
-    move_destination = []
 
-    # Checks all possible moves for piece
+    # Checks all possible moves for piece, return list where sublist is [priority, y, x]
+    # move_direction = 1 --> move down
+    # move direction = -1 --> move up
     def check_move(piece, move_direction):
-        can_move = False
-        move_priority = 0
+        move_priority = None
+        y = piece.y + move_direction
+        x = piece.x
         next_move = []
-        y = piece.y-1 + move_direction
-        x = piece.x-1
+
 
         # Checking is next field is available to move on
-        if 0<y<8 and x+1<8 and x-1>0:
+        if 0<y<8:
 
             # Go to next row
             row = board[y]
 
             # Check is next field is empty
-            if row[x-1] == " ":     # this statement should be refactored to function
-                print(f"can place at:{y},{x-1}")
-                can_move = True
+            if (x-1>=0) and row[x-1] == " ":     # this statement should be refactored to function
                 move_priority = 1
                 next_move.append([move_priority, y, x-1])
 
             # Check is next field is empty
-            if row[x+1] == " ":     # this statement should be refactored to function
-                print(f"can place at:{y},{x+1}")
-                can_move = True
+            if (x+1<8) and row[x+1] == " ":     # this statement should be refactored to function
                 move_priority = 1
                 next_move.append([move_priority, y, x+1])
 
-            # If piece has to jump opportunity
-            next_row = board[y+1]
-            if 0<x-2<8 and 0<x+2<8:
 
-                # If next row diagonal fieldsare on the board
-                if row[x-1] != " " and next_row[x-2] == " ":
-                    # if piece in next row is not the same color do:
-                    if not (row[x-1].is_white and is_white):
-                        print("jump")
-                        can_move = True
-                        move_priority = 2
-                        next_move.clear()                   # <==== Check if has any high priority move on the list, if no then clear the list
-                        next_move.append([move_priority, y, x-2])
+            # If piece has to jump opportunity --> need testing
+            if y+1<8:
+                next_row = board[y+1]
 
-                # If next row diagonal fieldsare on the board
-                if row[x+1] != " " and next_row[x+2] == " ":
-                    # if piece in next row is not the same color do:
-                    if not (row[x-1].is_white and is_white):
-                        print("jump")
-                        can_move = True
-                        move_priority = 2
-                        next_move.clear()                   # <==== Check if has any high priority move on the list, if no then clear the list
-                        next_move.append([move_priority, y, x+2])
+            # JUMPS HERE ---> need testing
 
-        
+            # If next row diagonal fieldsare on the board
+            # if row[x-1] != " " and next_row[x-2] == " ":
+            #     # if piece in next row is not the same color do:
+            #     if not (row[x-1].is_white and is_white):
+            #         print("jump")
+            #         move_priority = 2
+            #         next_move.clear()                   # <==== Check if has any high priority move on the list, if no then clear the list
+            #         next_move.append([move_priority, y, x-2])
+
+            # # If next row diagonal fieldsare on the board
+            # if row[x+1] != " " and next_row[x+2] == " ":
+            #     # if piece in next row is not the same color do:
+            #     if not (row[x-1].is_white and is_white):
+            #         print("jump")
+            #         move_priority = 2
+            #         next_move.clear()                   # <==== Check if has any high priority move on the list, if no then clear the list
+            #         next_move.append([move_priority, y, x+2])
+
         # Returns possible moves list
         return next_move
 
-    def make_move(piece, move_destination):
-        # Takes piece and move_destination to move the piece to new position, affter that ends turn
+    def make_move(piece):
+        # Move the piece to new position
         pass
 
     # Function is iterating piece by piece
@@ -214,18 +212,21 @@ def board_loop(is_white):
 
                     # Instructions for white pieces
                     piece = field
-                    if piece.is_white:
-                        if piece.move_direction == "d":
-                            piece.set_moves(check_move(piece, 1))
-                            make_move(piece,0)
 
-                    # Instructions for black pieces
+                    if piece.is_white:
+
+                        # ckeck all possible moves
+                        check_move(piece, 1)
+                        
+
+                    # Instructions for black pieces, still TODO
                     if not piece.is_white:
-                        if piece.move_direction == "d":
-                            piece.set_moves(check_move(piece, 1))
-                            make_move(piece,0)
-                            print("black  piece, moves up(+1)")
-                            print(piece.y, "->", piece.y+1)
+                        # if piece.move_direction == "d":
+                        #     piece.set_moves(check_move(piece, 1))
+                        #     make_move(piece,0)
+                        #     print("black  piece, moves up(+1)")
+                        #     print(piece.y, "->", piece.y+1)
+                        pass
 
                 # Instructions for empty field (without piece on it)
                 elif field == " ":

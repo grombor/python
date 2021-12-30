@@ -30,16 +30,12 @@ class Piece:
     # Moving function prototype
     # Update location of piece
     def move(self, y, x):
-        #row = board[self.y]
-        #row[x] = " "
         self.x = x
         self.y = y
-        #row = board[y]
-        #row[x] = 
         
 
     def draw(self):
-        """ Assigns symbols to pieces depend on color (white or not) and status (king of men) """
+        """ Assigns symbols to pieces depend on color (white or not) and status (king or men) """
 
         global piece_symbol
         if self.is_white: 
