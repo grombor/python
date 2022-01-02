@@ -12,24 +12,19 @@ if __name__ == "__main__":
     # is_white => True
     board_loop(True)
 
+    print("################# 1 turn #################")
 
-    # pionek
-    # instancja pionka z 2,0
-    # piece = board[2][0]
-    # print(piece)
-    # print(piece.y, piece.x, piece.is_white)
-    # end pionek
+    print_board()
+    board_loop(True)
 
-    # print("\n####### tura 1 #############\n")
-    # piece_move(piece, 3, 1)
-    # print_board()
-    # print(piece.y, piece.x, piece.is_white)
+
+    print("################# 2 turn #################")
+
+    print_board()
+    board_loop(True)
+
+    print("################# 3 turn #################")
     
+    print_board()
 
-
-    # print("\n####### tura 2 #############\n")
-    # piece_move(piece, 4, 0)
-    # print_board()
-    # print(piece.y, piece.x, piece.is_white)
-    
    

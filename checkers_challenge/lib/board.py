@@ -1,6 +1,21 @@
 from .piece import Piece
 
-# Checkers board is a list of 8 rows list
+"""
+Checkers board is a list of 8 rows list
+
+0 [fields from 0..7]
+1 [fields from 0..7]
+2 [fields from 0..7]
+3 [fields from 0..7]
+4 [fields from 0..7]
+5 [fields from 0..7]
+6 [fields from 0..7]
+7 [fields from 0..7]
+
+Top row belong to white pieces, down ones for black pieces.
+
+"""
+
 board = []
 
 
@@ -112,8 +127,12 @@ def generate_pieces():
     temp = []
 
 
-def piece_move(piece, y, x):
-    
+def piece_move(piece_move_object):
+
+    y = piece_move_object[0][1]
+    x = piece_move_object[0][2]
+    piece = piece_move_object[1]
+
     # Put piece at the new position
     board[y][x] = piece
     
@@ -123,6 +142,7 @@ def piece_move(piece, y, x):
     board[piece_previous_y][piece_previous_x] = " "
     
     # Set new x and y for piece
+    # Here should be Piece.move(x,y)
     piece.x = x
     piece.y = y
     
@@ -214,7 +234,7 @@ def board_loop(is_white):
                 new_move_object = [move, piece]
                 all_possible_moves.append(new_move_object)
 
-    # Function is iterating piece by piece
+    # Function is iterating piece by piece checking field is piece or not. Performs moves check for each piece and make move proposition
     def fields_loop():
         for field in rows:
 
@@ -263,9 +283,14 @@ def board_loop(is_white):
             # Iterate for each field in a row
             fields_loop()
     
-        # sort list by move priority
-        all_possible_moves.sort(key=sort_fun)
-        print(all_possible_moves)
+        # Sort list by move priority
+        all_possible_moves.sort(reverse=True, key=sort_fun)
+        
+        # Pick the highest priority move
+        next_move = all_possible_moves[0]
+
+        # Move piece on the board
+        piece_move(next_move)
 
     # Loop for black pieces
     elif not is_white:
