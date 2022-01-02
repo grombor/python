@@ -253,31 +253,21 @@ def board_loop(is_white):
                             make_move_object(piece, moves)
 
 
-                        # if len(moves)>0:
-                        #     # Pick the best move
-                        #     next_move = make_move(piece, moves)
-                        #     # Move piece
-                        #     print(next_move)
-                        # else: print("White lose.")
+                    # Instructions for black pieces
+                    else:
 
-                            
-                        
-
-                    # Instructions for black pieces, still TODO
-                    if not piece.is_white:
-                        # if piece.move_direction == "d":
-                        #     piece.set_moves(check_move(piece, 1))
-                        #     make_move(piece,0)
-                        #     print("black  piece, moves up(+1)")
-                        #     print(piece.y, "->", piece.y+1)
-                        pass
+                        # ckeck all possible moves
+                        moves = check_move(piece, -1)
+                        # Add move object [possible_move, piece_reference] to the global list of the all possible moves
+                        if len(moves)>0:
+                            make_move_object(piece, moves)
 
                 # Instructions for empty field (without piece on it)
                 elif field == " ":
                     pass
 
     # Loop for white pieces
-    if is_white:
+    if is_white != True:
         # Iterate for each row from down to up
         for rows in reversed(board):
             # Iterate for each field in a row
@@ -292,8 +282,23 @@ def board_loop(is_white):
         # Move piece on the board
         piece_move(next_move)
 
+        # Clear moves list
+        all_possible_moves.clear()
+
     # Loop for black pieces
-    elif not is_white:
+    elif is_white:
         for rows in board:
             fields_loop()
+        
+        # Sort list by move priority
+        all_possible_moves.sort(reverse=True, key=sort_fun)
+        
+        # Pick the highest priority move
+        next_move = all_possible_moves[0]
+
+        # Move piece on the board
+        piece_move(next_move)
+
+        # Clear moves list
+        all_possible_moves.clear()
 
