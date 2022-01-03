@@ -2,7 +2,12 @@ from lib.board import board_loop, piece_move, generate_pieces, print_board, set_
 
 if __name__ == "__main__":
 
-    # Create board with  pieces
+    # Variables
+
+    # True for white pieces turn, False for black pieces turn
+    white = True
+
+    # Create board with pieces
     generate_pieces()
 
     # Show board on the screen
@@ -11,21 +16,29 @@ if __name__ == "__main__":
     # Define moves for white pieces; is_white => True
     # Define moves for black pieces; is_white => False
 
-    board_loop(False)
+    # board_loop(False)
 
-    print("################# 1 turn #################")
+    # print("################# 1 turn #################")
 
-    print_board()
-    board_loop(False)
+    # print_board()
+    # board_loop(False)
 
 
-    print("################# 2 turn #################")
+    # print("################# 2 turn #################")
 
-    print_board()
-    board_loop(False)
+    # print_board()
+    # board_loop(False)
 
-    print("################# 3 turn #################")
+    # print("################# 3 turn #################")
     
-    print_board()
+    # print_board()
+
+    for i in range(5):
+        print(f"\n################# {i+1}. turn #################\n")
+        print_board()
+        board_loop(white)
+        white = not white
+
+
 
    

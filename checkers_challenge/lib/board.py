@@ -151,7 +151,23 @@ def piece_move(piece_move_object):
 
 # Prints board on the screen
 def print_board():
+
+    # Numerators for the board
+    columns_numerators = [" 1", " 2", "3", "4 ", "5" , "6 ", "7 ", "8 "]
+    print(*columns_numerators)
+    rows_numerator = ["1", "2", "3", "4", "5" , "6", "7", "8"]
+    i = 0
+
     for rows in board:
+        if i==0:
+            i+=1
+        if 1<=i<9:
+            print(i, end="")
+            i+=1
+        # if i==8:
+        #     print(i, end="")
+        if i>9:
+            pass
         print(*rows)
 
 
