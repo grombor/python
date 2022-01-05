@@ -33,7 +33,7 @@ if __name__ == "__main__":
     
     # print_board()
 
-    for i in range(5):
+    for i in range(10):
         print(f"\n################# {i+1}. turn #################\n")
         print_board()
         board_loop(white)

@@ -1,4 +1,5 @@
 from .piece import Piece
+from loguru import logger as log
 
 """
 Checkers board is a list of 8 rows list
@@ -191,7 +192,6 @@ def board_loop(is_white):
     # move_direction = 1 --> move down
     # move direction = -1 --> move up
     def check_move(piece, move_direction):
-        move_priority = None
         y = piece.y + move_direction
         x = piece.x
         next_move = []
@@ -204,41 +204,86 @@ def board_loop(is_white):
 
             # Check is next field is empty
             if (x-1>=0) and row[x-1] == " ":     # this statement should be refactored to function
-                move_priority = 1
-                next_move.append([move_priority, y, x-1])
+                next_move.append([1, y, x-1])
 
             # Check is next field is empty
             if (x+1<8) and row[x+1] == " ":     # this statement should be refactored to function
-                move_priority = 1
-                next_move.append([move_priority, y, x+1])
+                next_move.append([1, y, x+1])
 
 
             # If piece has to jump opportunity --> need testing
             if y+1<8:
                 next_row = board[y+1]
 
-            # JUMPS HERE ---> need testing
-
-            # If next row diagonal fieldsare on the board
-            # if row[x-1] != " " and next_row[x-2] == " ":
-            #     # if piece in next row is not the same color do:
-            #     if not (row[x-1].is_white and is_white):
-            #         print("jump")
-            #         move_priority = 2
-            #         next_move.clear()                   # <==== Check if has any high priority move on the list, if no then clear the list
-            #         next_move.append([move_priority, y, x-2])
-
-            # # If next row diagonal fieldsare on the board
-            # if row[x+1] != " " and next_row[x+2] == " ":
-            #     # if piece in next row is not the same color do:
-            #     if not (row[x-1].is_white and is_white):
-            #         print("jump")
-            #         move_priority = 2
-            #         next_move.clear()                   # <==== Check if has any high priority move on the list, if no then clear the list
-            #         next_move.append([move_priority, y, x+2])
 
         # Returns possible moves list
         return next_move
+
+    # Check is jump possible
+    def check_jump(piece, move_direction):
+        y = piece.y
+        x = piece.x
+        has_jump = []
+
+        # Check is jump possible
+        if y + 2*move_direction in range (8):
+      
+            # Check the next row diagonaly
+            left = x-1      # field diagonally on the left
+            right = x+1     # field diagonally on the right
+
+            # If it is a field on the left of current piece
+            if left in range(8):
+
+                # Go check next row, check field on the diagonal left
+                field = board[y+move_direction][x-1]
+
+                # Check is there a piece and
+                # Check is the different color than current piece
+                if type(field) == Piece and field.is_white != piece.is_white:
+
+                    y = y+2*move_direction
+                    x = left-1
+
+                    # Go to next row, check is a free field here
+                    field = board[y][x]
+
+                    # Check if field in on the board
+                    if type(field) == str and (y in range(8)) and (x in range(8)):
+                        
+                        if field == " ":
+                            log.info(f"{piece} can jump from {piece.y, piece.x} to: {y},{x}")
+                            has_jump.append([2,y,x])
+
+
+            if right in range(8):
+
+                # Go check next row, check field on the diagonal left
+                field = board[y+move_direction][x+1]
+
+                # Check is there a piece and
+                # Check is the different color than current piece
+                if type(field) == Piece and field.is_white != piece.is_white:
+
+                    y = y+2*move_direction
+                    x = right+1
+
+                    # Go to next row, check is a free field here
+                    field = board[y][x]
+
+                    # Check if field in on the board
+                    if type(field) == str and (y in range(8)) and (x in range(8)):
+                        
+                        if field == " ":
+                            log.info(f"{piece} can jump from {piece.y, piece.x} to: {y},{x}")
+                            has_jump.append([2,y,x])
+
+        return has_jump
+
+
+
+
+
 
     # Takes list of all piece possible moves and return list where record is [move, piece]
     def make_move_object(piece, moves):
@@ -262,10 +307,17 @@ def board_loop(is_white):
 
                     if piece.is_white:
 
-                        # ckeck all possible moves
+                        # Check all possible moves
                         moves = check_move(piece, 1)
+                        
+                        jumps = check_jump(piece, 1)
+
+                        # Check possible jumps
+                        if len(jumps)>0:
+                            make_move_object(piece, jumps)
+
                         # Add move object [possible_move, piece_reference] to the global list of the all possible moves
-                        if len(moves)>0:
+                        elif len(moves)>0:
                             make_move_object(piece, moves)
 
 
@@ -274,8 +326,15 @@ def board_loop(is_white):
 
                         # ckeck all possible moves
                         moves = check_move(piece, -1)
+
+                        jumps = check_jump(piece, -1)
+
+                        # Check possible jumps
+                        if len(jumps)>0:
+                            make_move_object(piece, jumps)
+
                         # Add move object [possible_move, piece_reference] to the global list of the all possible moves
-                        if len(moves)>0:
+                        elif len(moves)>0:
                             make_move_object(piece, moves)
 
                 # Instructions for empty field (without piece on it)
