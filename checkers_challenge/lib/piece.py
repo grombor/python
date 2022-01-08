@@ -4,12 +4,11 @@ class Piece:
     piece_symbol = ""
 
 
-    def __init__(self, x=0, y=0, white=False, direction=False, is_king=False, jump=False, active=True, moves=[]):
+    def __init__(self, x=0, y=0, white=False, is_king=False, active=True):
         self.x = x
         self.y = y
         self.is_white = white               # The color of the piece
         self.is_king = is_king              # If True, it means that the piece reach the king row and become kinged
-        self.has_jump = jump                # If True the piece has to jump
         self.is_active = active             # If True means the piece in game
 
     

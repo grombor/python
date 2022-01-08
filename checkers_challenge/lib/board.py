@@ -25,7 +25,7 @@ def generate_pieces():
 
     # Generate 1st line of white
     for field in range(0,8,2):
-        new_piece = Piece(field, 0, True, "d")
+        new_piece = Piece(field, 0, True)
         temp.append(new_piece)
         temp.append("\u2b1c")
 
@@ -38,7 +38,7 @@ def generate_pieces():
 
     # Generate 2nd line of white
     for field in range(1,8,2):
-        new_piece = Piece(field, 1, True, "d")
+        new_piece = Piece(field, 1, True)
         temp.append("\u2b1c")
         temp.append(new_piece)
 
@@ -51,7 +51,7 @@ def generate_pieces():
 
     # Generate 3nd line of white
     for field in range(0,8,2):
-        new_piece = Piece(field, 2, True, "d")
+        new_piece = Piece(field, 2, True)
         temp.append(new_piece)
         temp.append("\u2b1c")
 
@@ -88,7 +88,7 @@ def generate_pieces():
 
     # Generate 1st line of black
     for field in range(1, 9, 2):
-        new_piece = Piece(field, 5, False, "u")
+        new_piece = Piece(field, 5, False)
         temp.append("\u2b1c")
         temp.append(new_piece)
 
@@ -101,7 +101,7 @@ def generate_pieces():
 
     # Generate 2nd line of black
     for field in range(0, 8, 2):
-        new_piece = Piece(field, 6, False, "u")
+        new_piece = Piece(field, 6, False)
         temp.append(new_piece)
         temp.append("\u2b1c")
 
@@ -114,7 +114,7 @@ def generate_pieces():
 
     # Generate 3nd line of black
     for field in range(1, 9, 2):
-        new_piece = Piece(field, 7, False, "u")
+        new_piece = Piece(field, 7, False)
         temp.append("\u2b1c")
         temp.append(new_piece)
 
@@ -158,7 +158,6 @@ def print_board():
     # Numerators for the board
     columns_numerators = [" 1", " 2", "3", "4 ", "5" , "6 ", "7 ", "8 "]
     print(*columns_numerators)
-    rows_numerator = ["1", "2", "3", "4", "5" , "6", "7", "8"]
     i = 0
 
     for rows in board:
@@ -167,8 +166,6 @@ def print_board():
         if 1<=i<9:
             print(i, end="")
             i+=1
-        # if i==8:
-        #     print(i, end="")
         if i>9:
             pass
         print(*rows)
@@ -244,18 +241,23 @@ def board_loop(is_white):
                 # Check is the different color than current piece
                 if type(field) == Piece and field.is_white != piece.is_white:
 
-                    y = y+2*move_direction
-                    x = left-1
-
                     # Go to next row, check is a free field here
-                    next_field = board[y][x]
+                    new_y = y+2*move_direction
+                    new_x = left-1
+                    next_field = board[new_y][new_x]
 
                     # Check if field in on the board
                     if type(next_field) == str and (y in range(8)) and (x in range(8)):
                         
                         if next_field == " ":
-                            log.info(f"{piece} can jump from {piece.y, piece.x} to: {y},{x}")
-                            has_jump.append([2,y,x])
+                            log.info(f"{piece} can jump from {piece.y, piece.x} to: {new_y},{new_x}")
+                            has_jump.append([2,new_y,new_x])
+                            
+                            #Remove jumped piece from the board
+                            log.info(f"jumped field: {field}: {field.y},{field.x}")
+                            board[field.y][field.x] = " "
+                            log.info(f"jumped field after erase {field}")
+                            set_board(board)
 
 
             if right in range(8):
@@ -267,18 +269,23 @@ def board_loop(is_white):
                 # Check is the different color than current piece
                 if type(field) == Piece and field.is_white != piece.is_white:
 
-                    y = y+2*move_direction
-                    x = right+1
-
                     # Go to next row, check is a free field here
-                    next_field = board[y][x]
+                    new_y = y+2*move_direction
+                    new_x = right+1
+                    next_field = board[new_y][new_x]
 
                     # Check if field in on the board
                     if type(next_field) == str and (y in range(8)) and (x in range(8)):
                         
                         if next_field == " ":
-                            log.info(f"{piece} can jump from {piece.y, piece.x} to: {y},{x}")
-                            has_jump.append([2,y,x])
+                            log.info(f"{piece} can jump from {piece.y, piece.x} to: {new_y},{new_x}")
+                            has_jump.append([2,new_y,new_x])
+                                                        
+                            #Remove jumped piece from the board
+                            log.info(f"jumped field: {field}: {field.y},{field.x}")
+                            board[field.y][field.x] = " "
+                            log.info(f"jumped field after erase {field}")
+                            set_board(board)
 
         return has_jump
 
