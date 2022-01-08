@@ -3,7 +3,6 @@ from loguru import logger as log
 
 """
 Checkers board is a list of 8 rows list
-
 0 [fields from 0..7]
 1 [fields from 0..7]
 2 [fields from 0..7]
@@ -12,9 +11,7 @@ Checkers board is a list of 8 rows list
 5 [fields from 0..7]
 6 [fields from 0..7]
 7 [fields from 0..7]
-
 Top row belong to white pieces, down ones for black pieces.
-
 """
 
 board = []
@@ -146,6 +143,11 @@ def piece_move(piece_move_object):
     # Here should be Piece.move(x,y)
     piece.x = x
     piece.y = y
+
+    if piece.y == 7 and piece.is_white == True:
+        piece.set_king()
+    if piece.y == 0 and piece.is_white == False:
+        piece.set_king()
     
 
 
@@ -246,12 +248,12 @@ def board_loop(is_white):
                     x = left-1
 
                     # Go to next row, check is a free field here
-                    field = board[y][x]
+                    next_field = board[y][x]
 
                     # Check if field in on the board
-                    if type(field) == str and (y in range(8)) and (x in range(8)):
+                    if type(next_field) == str and (y in range(8)) and (x in range(8)):
                         
-                        if field == " ":
+                        if next_field == " ":
                             log.info(f"{piece} can jump from {piece.y, piece.x} to: {y},{x}")
                             has_jump.append([2,y,x])
 
@@ -269,12 +271,12 @@ def board_loop(is_white):
                     x = right+1
 
                     # Go to next row, check is a free field here
-                    field = board[y][x]
+                    next_field = board[y][x]
 
                     # Check if field in on the board
-                    if type(field) == str and (y in range(8)) and (x in range(8)):
+                    if type(next_field) == str and (y in range(8)) and (x in range(8)):
                         
-                        if field == " ":
+                        if next_field == " ":
                             log.info(f"{piece} can jump from {piece.y, piece.x} to: {y},{x}")
                             has_jump.append([2,y,x])
 
@@ -310,6 +312,7 @@ def board_loop(is_white):
                         # Check all possible moves
                         moves = check_move(piece, 1)
                         
+                        # Checks possible jumps
                         jumps = check_jump(piece, 1)
 
                         # Check possible jumps
@@ -327,6 +330,7 @@ def board_loop(is_white):
                         # ckeck all possible moves
                         moves = check_move(piece, -1)
 
+                        # Checks possible jumps
                         jumps = check_jump(piece, -1)
 
                         # Check possible jumps
@@ -374,6 +378,12 @@ def board_loop(is_white):
         # Move piece on the board
         piece_move(next_move)
 
+        # Check if move was a jump
+        # if next_move[0][0]==2:
+        #     print (next_move)    
+        # Check next jump move    
+        # if next_move[1][0]==2:
+        #     print (next_move) 
+
         # Clear moves list
         all_possible_moves.clear()
-
