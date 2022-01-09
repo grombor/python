@@ -124,6 +124,82 @@ def generate_pieces():
     # Clear temp
     temp = []
 
+# Check is jump possible
+def check_jump(piece, move_direction):
+    y = piece.y
+    x = piece.x
+    has_jump = []
+
+    # Check is jump possible
+    if y + 2*move_direction in range (8):
+    
+        # Check the next row diagonaly
+        left = x-1      # field diagonally on the left
+        right = x+1     # field diagonally on the right
+
+        # If it is a field on the left of current piece
+        if left in range(8):
+
+            # Go check next row, check field on the diagonal left
+            field = board[y+move_direction][x-1]
+
+            # Check is there a piece and
+            # Check is the different color than current piece
+            if type(field) == Piece and field.is_white != piece.is_white:
+
+                # Go to next row, check is a free field here
+                new_y = y+2*move_direction
+                new_x = left-1
+                next_field = board[new_y][new_x]
+
+                # Check if field in on the board
+                if type(next_field) == str and (y in range(8)) and (x in range(8)):
+                    
+                    if next_field == " ":
+                        has_jump.append([2,new_y,new_x])
+                        
+                        #Remove jumped piece from the board
+                        board[field.y][field.x] = " "
+                        set_board(board)
+
+                        temp_piece = Piece(new_x, new_y, piece.is_white)
+                        temp = check_jump(temp_piece, move_direction)
+                        if len(temp)>0:
+                            return temp
+
+
+
+        if right in range(8):
+
+            # Go check next row, check field on the diagonal left
+            field = board[y+move_direction][x+1]
+
+            # Check is there a piece and
+            # Check is the different color than current piece
+            if type(field) == Piece and field.is_white != piece.is_white:
+
+                # Go to next row, check is a free field here
+                new_y = y+2*move_direction
+                new_x = right+1
+                next_field = board[new_y][new_x]
+
+                # Check if field in on the board
+                if type(next_field) == str and (y in range(8)) and (x in range(8)):
+                    
+                    if next_field == " ":
+                        has_jump.append([2,new_y,new_x])
+                                                    
+                        #Remove jumped piece from the board
+                        board[field.y][field.x] = " "
+                        set_board(board)
+
+                        temp_piece = Piece(new_x, new_y, piece.is_white)
+                        temp = check_jump(temp_piece, move_direction)
+                        if len(temp)>0:
+                            return temp
+
+    return has_jump
+
 
 def piece_move(piece_move_object):
 
@@ -135,20 +211,16 @@ def piece_move(piece_move_object):
     board[y][x] = piece
     
     # Remove piece from old position
-    piece_previous_x = piece.x
-    piece_previous_y = piece.y
+    piece_previous_x, piece_previous_y = piece.get_xy()
     board[piece_previous_y][piece_previous_x] = " "
     
     # Set new x and y for piece
-    # Here should be Piece.move(x,y)
-    piece.x = x
-    piece.y = y
+    piece.set_yx(y,x)
 
     if piece.y == 7 and piece.is_white == True:
         piece.set_king()
     if piece.y == 0 and piece.is_white == False:
         piece.set_king()
-    
 
 
 
@@ -218,77 +290,7 @@ def board_loop(is_white):
         # Returns possible moves list
         return next_move
 
-    # Check is jump possible
-    def check_jump(piece, move_direction):
-        y = piece.y
-        x = piece.x
-        has_jump = []
-
-        # Check is jump possible
-        if y + 2*move_direction in range (8):
-      
-            # Check the next row diagonaly
-            left = x-1      # field diagonally on the left
-            right = x+1     # field diagonally on the right
-
-            # If it is a field on the left of current piece
-            if left in range(8):
-
-                # Go check next row, check field on the diagonal left
-                field = board[y+move_direction][x-1]
-
-                # Check is there a piece and
-                # Check is the different color than current piece
-                if type(field) == Piece and field.is_white != piece.is_white:
-
-                    # Go to next row, check is a free field here
-                    new_y = y+2*move_direction
-                    new_x = left-1
-                    next_field = board[new_y][new_x]
-
-                    # Check if field in on the board
-                    if type(next_field) == str and (y in range(8)) and (x in range(8)):
-                        
-                        if next_field == " ":
-                            log.info(f"{piece} can jump from {piece.y, piece.x} to: {new_y},{new_x}")
-                            has_jump.append([2,new_y,new_x])
-                            
-                            #Remove jumped piece from the board
-                            log.info(f"jumped field: {field}: {field.y},{field.x}")
-                            board[field.y][field.x] = " "
-                            log.info(f"jumped field after erase {field}")
-                            set_board(board)
-
-
-            if right in range(8):
-
-                # Go check next row, check field on the diagonal left
-                field = board[y+move_direction][x+1]
-
-                # Check is there a piece and
-                # Check is the different color than current piece
-                if type(field) == Piece and field.is_white != piece.is_white:
-
-                    # Go to next row, check is a free field here
-                    new_y = y+2*move_direction
-                    new_x = right+1
-                    next_field = board[new_y][new_x]
-
-                    # Check if field in on the board
-                    if type(next_field) == str and (y in range(8)) and (x in range(8)):
-                        
-                        if next_field == " ":
-                            log.info(f"{piece} can jump from {piece.y, piece.x} to: {new_y},{new_x}")
-                            has_jump.append([2,new_y,new_x])
-                                                        
-                            #Remove jumped piece from the board
-                            log.info(f"jumped field: {field}: {field.y},{field.x}")
-                            board[field.y][field.x] = " "
-                            log.info(f"jumped field after erase {field}")
-                            set_board(board)
-
-        return has_jump
-
+    
 
 
 
@@ -384,13 +386,6 @@ def board_loop(is_white):
 
         # Move piece on the board
         piece_move(next_move)
-
-        # Check if move was a jump
-        # if next_move[0][0]==2:
-        #     print (next_move)    
-        # Check next jump move    
-        # if next_move[1][0]==2:
-        #     print (next_move) 
 
         # Clear moves list
         all_possible_moves.clear()

@@ -10,7 +10,7 @@ if __name__ == "__main__":
     # Create board with pieces
     generate_pieces()
 
-    for i in range(10):
+    for i in range(20):
         print(f"\n################# {i+1}. turn #################\n")
         print_board()
         board_loop(white)
