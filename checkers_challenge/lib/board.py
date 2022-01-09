@@ -1,4 +1,5 @@
 from .piece import Piece
+from random import randrange
 from loguru import logger as log
 
 """
@@ -150,22 +151,23 @@ def check_jump(piece, move_direction):
                 # Go to next row, check is a free field here
                 new_y = y+2*move_direction
                 new_x = left-1
-                next_field = board[new_y][new_x]
+                if (new_y in range(8)) and new_x in range(8):
+                    next_field = board[new_y][new_x]
 
-                # Check if field in on the board
-                if type(next_field) == str and (y in range(8)) and (x in range(8)):
-                    
-                    if next_field == " ":
-                        has_jump.append([2,new_y,new_x])
+                    # Check if field in on the board
+                    if type(next_field) == str and (y in range(8)) and (x in range(8)):
                         
-                        #Remove jumped piece from the board
-                        board[field.y][field.x] = " "
-                        set_board(board)
+                        if next_field == " ":
+                            has_jump.append([2,new_y,new_x])
+                            
+                            #Remove jumped piece from the board
+                            board[field.y][field.x] = " "
+                            set_board(board)
 
-                        temp_piece = Piece(new_x, new_y, piece.is_white)
-                        temp = check_jump(temp_piece, move_direction)
-                        if len(temp)>0:
-                            return temp
+                            temp_piece = Piece(new_x, new_y, piece.is_white)
+                            temp = check_jump(temp_piece, move_direction)
+                            if len(temp)>0:
+                                return temp
 
 
 
@@ -181,22 +183,23 @@ def check_jump(piece, move_direction):
                 # Go to next row, check is a free field here
                 new_y = y+2*move_direction
                 new_x = right+1
-                next_field = board[new_y][new_x]
+                if (new_y in range(8)) and new_x in range(8):
+                    next_field = board[new_y][new_x]
 
-                # Check if field in on the board
-                if type(next_field) == str and (y in range(8)) and (x in range(8)):
-                    
-                    if next_field == " ":
-                        has_jump.append([2,new_y,new_x])
-                                                    
-                        #Remove jumped piece from the board
-                        board[field.y][field.x] = " "
-                        set_board(board)
+                    # Check if field in on the board
+                    if type(next_field) == str and (y in range(8)) and (x in range(8)):
+                        
+                        if next_field == " ":
+                            has_jump.append([2,new_y,new_x])
+                                                        
+                            #Remove jumped piece from the board
+                            board[field.y][field.x] = " "
+                            set_board(board)
 
-                        temp_piece = Piece(new_x, new_y, piece.is_white)
-                        temp = check_jump(temp_piece, move_direction)
-                        if len(temp)>0:
-                            return temp
+                            temp_piece = Piece(new_x, new_y, piece.is_white)
+                            temp = check_jump(temp_piece, move_direction)
+                            if len(temp)>0:
+                                return temp
 
     return has_jump
 
@@ -221,7 +224,6 @@ def piece_move(piece_move_object):
         piece.set_king()
     if piece.y == 0 and piece.is_white == False:
         piece.set_king()
-
 
 
 # Prints board on the screen
@@ -291,11 +293,6 @@ def board_loop(is_white):
         return next_move
 
     
-
-
-
-
-
     # Takes list of all piece possible moves and return list where record is [move, piece]
     def make_move_object(piece, moves):
 
@@ -305,6 +302,7 @@ def board_loop(is_white):
             for move in moves:
                 new_move_object = [move, piece]
                 all_possible_moves.append(new_move_object)
+
 
     # Function is iterating piece by piece checking field is piece or not. Performs moves check for each piece and make move proposition
     def fields_loop():
@@ -382,7 +380,7 @@ def board_loop(is_white):
         all_possible_moves.sort(reverse=True, key=sort_fun)
         
         # Pick the highest priority move
-        next_move = all_possible_moves[0]
+        next_move = all_possible_moves[randrange(len(all_possible_moves))]
 
         # Move piece on the board
         piece_move(next_move)
