@@ -1,4 +1,5 @@
-from lib.board import board_loop, manual_turn, piece_move, generate_pieces, print_board, set_board, board
+from lib.board import board_loop, piece_move, generate_pieces, print_board, set_board, board
+from lib.human import manual_turn
 
 if __name__ == "__main__":
 
@@ -22,7 +23,7 @@ if __name__ == "__main__":
         print("Computer turn:")
         board_loop(False)
         print_board()
-        break
+
 
 
 

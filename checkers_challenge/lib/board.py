@@ -15,9 +15,11 @@ Checkers board is a list of 8 rows list
 7 [fields from 0..7]
 Top row belong to white pieces, down ones for black pieces.
 """
-
 board = []
 all_possible_moves = []
+
+def get_board():
+    return board
 
 # Generates new game board
 def generate_pieces():
@@ -385,60 +387,11 @@ def board_loop(is_white):
         all_possible_moves.sort(reverse=True, key=sort_fun)
         
         # Pick the highest priority move
-        next_move = all_possible_moves[randrange(len(all_possible_moves))]
+        next_move = all_possible_moves[0]
 
         # Move piece on the board
         piece_move(next_move)
 
         # Clear moves list
         all_possible_moves.clear()
-
-def manual_turn():
-    print("White pieces turn now. It is your turn.\n")
-    print_board()
-    while True:
-        try:
-            y = int(input("\nChoose piece: enter y-coord for piece: "))-1
-            x = int(input("Choose piece: enter x-coord for piece: "))-1
-            piece = board[y][x]
-
-            if type(piece) == Piece and piece.is_white == True:
-                log.info(f"piece: {piece}, checking for jumps...")
-                temp = check_jump(piece, 1)
-
-                if len(temp)>0:
-                    print(f"You are obligated to jump.")
-
-                else:
-                    temp = check_move(piece, 1)
-                    print(temp)
-                    print("\n Where to move?")
-                    y = int(input("\nChoose piece: enter y-coord: "))-1
-                    x = int(input("Choose piece: enter x-coord: "))-1
-                    move = board[y][x]
-                    log.info(f"checking move field {y+1}, {x+1}")
-                    if move == " ":
-                        log.info("check pass")
-                        # Put piece at the new position
-                        board[y][x] = piece
-                        
-                        log.info("Remove piece from old position")
-                        # Remove piece from old position
-                        piece_previous_x, piece_previous_y = piece.get_xy()
-                        board[piece_previous_y][piece_previous_x] = " "
-                        
-                        # Set new x and y for piece
-                        piece.set_yx(y,x)
-
-                        if piece.y == 7 and piece.is_white == True:
-                            piece.set_king()
-                        if piece.y == 0 and piece.is_white == False:
-                            piece.set_king()
-                        log.info(f"piece was moved to {y-1}, {x-1}")
-                log.debug(f"check_jump: {temp}")
-                break
-            else: print(f"There is no piece with typed coords.\n")
-
-        except IndexError:
-            print(f"There is no piece with typed coords.\n")
 
