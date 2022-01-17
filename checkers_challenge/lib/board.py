@@ -1,3 +1,4 @@
+from asyncio.log import logger
 from .piece import Piece
 from random import randrange
 from loguru import logger as log
@@ -397,22 +398,17 @@ def manual_turn():
     print_board()
     while True:
         try:
-
-            try:
-                y = int(input("\nChoose piece: enter y-coord for piece: "))-1
-                x = int(input("Choose piece: enter x-coord for piece: "))-1
-                piece = board[y][x]
-            except ValueError:
-                print(f"There is no piece with typed coords.\n")
+            y = int(input("\nChoose piece: enter y-coord for piece: "))-1
+            x = int(input("Choose piece: enter x-coord for piece: "))-1
+            piece = board[y][x]
 
             if type(piece) == Piece and piece.is_white == True:
                 log.info(f"piece: {piece}, checking for jumps...")
                 temp = check_jump(piece, 1)
 
-# tu mi kod sie urywa...
-
                 if len(temp)>0:
                     print(f"You are obligated to jump.")
+
                 else:
                     temp = check_move(piece, 1)
                     print(temp)
@@ -421,7 +417,7 @@ def manual_turn():
                     x = int(input("Choose piece: enter x-coord: "))-1
                     move = board[y][x]
                     log.info(f"checking move field {y+1}, {x+1}")
-                    if type(move) == " ":
+                    if move == " ":
                         log.info("check pass")
                         # Put piece at the new position
                         board[y][x] = piece
