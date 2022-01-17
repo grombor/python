@@ -16,7 +16,7 @@ Top row belong to white pieces, down ones for black pieces.
 """
 
 board = []
-
+all_possible_moves = []
 
 # Generates new game board
 def generate_pieces():
@@ -204,6 +204,51 @@ def check_jump(piece, move_direction):
     return has_jump
 
 
+# Checks all possible moves for piece, return list where sublist is [priority, y, x]
+# move_direction = 1 --> move down
+# move direction = -1 --> move up
+def check_move(piece, move_direction):
+    y = piece.y + move_direction
+    x = piece.x
+    next_move = []
+
+    # Checking is next field is available to move on
+    if 0<y<8:
+
+        # Go to next row
+        row = board[y]
+
+        # Check is next field is empty
+        if (x-1>=0) and row[x-1] == " ":     # this statement should be refactored to function
+            next_move.append([1, y, x-1])
+
+        # Check is next field is empty
+        if (x+1<8) and row[x+1] == " ":     # this statement should be refactored to function
+            next_move.append([1, y, x+1])
+
+
+        # If piece has to jump opportunity --> need testing
+        if y+1<8:
+            next_row = board[y+1]
+
+
+    # Returns possible moves list
+    return next_move
+
+
+    
+# Takes list of all piece possible moves and return list where record is [move, piece]
+def make_move_object(piece, moves):
+
+    # If piece has move
+    if len(moves)>0:
+        # Add move to global moves list
+        for move in moves:
+            new_move_object = [move, piece]
+            all_possible_moves.append(new_move_object)
+
+
+
 def piece_move(piece_move_object):
 
     y = piece_move_object[0][1]
@@ -255,54 +300,13 @@ def set_board(new_board):
 # if is_white = True => means its white turn
 def board_loop(is_white):
         
-    all_possible_moves = []
+    
 
     # Sorting function
     def sort_fun(e):
         return e[0][0]
 
-    # Checks all possible moves for piece, return list where sublist is [priority, y, x]
-    # move_direction = 1 --> move down
-    # move direction = -1 --> move up
-    def check_move(piece, move_direction):
-        y = piece.y + move_direction
-        x = piece.x
-        next_move = []
-
-        # Checking is next field is available to move on
-        if 0<y<8:
-
-            # Go to next row
-            row = board[y]
-
-            # Check is next field is empty
-            if (x-1>=0) and row[x-1] == " ":     # this statement should be refactored to function
-                next_move.append([1, y, x-1])
-
-            # Check is next field is empty
-            if (x+1<8) and row[x+1] == " ":     # this statement should be refactored to function
-                next_move.append([1, y, x+1])
-
-
-            # If piece has to jump opportunity --> need testing
-            if y+1<8:
-                next_row = board[y+1]
-
-
-        # Returns possible moves list
-        return next_move
-
     
-    # Takes list of all piece possible moves and return list where record is [move, piece]
-    def make_move_object(piece, moves):
-
-        # If piece has move
-        if len(moves)>0:
-            # Add move to global moves list
-            for move in moves:
-                new_move_object = [move, piece]
-                all_possible_moves.append(new_move_object)
-
 
     # Function is iterating piece by piece checking field is piece or not. Performs moves check for each piece and make move proposition
     def fields_loop():
@@ -387,3 +391,58 @@ def board_loop(is_white):
 
         # Clear moves list
         all_possible_moves.clear()
+
+def manual_turn():
+    print("White pieces turn now. It is your turn.\n")
+    print_board()
+    while True:
+        try:
+
+            try:
+                y = int(input("\nChoose piece: enter y-coord for piece: "))-1
+                x = int(input("Choose piece: enter x-coord for piece: "))-1
+                piece = board[y][x]
+            except ValueError:
+                print(f"There is no piece with typed coords.\n")
+
+            if type(piece) == Piece and piece.is_white == True:
+                log.info(f"piece: {piece}, checking for jumps...")
+                temp = check_jump(piece, 1)
+
+# tu mi kod sie urywa...
+
+                if len(temp)>0:
+                    print(f"You are obligated to jump.")
+                else:
+                    temp = check_move(piece, 1)
+                    print(temp)
+                    print("\n Where to move?")
+                    y = int(input("\nChoose piece: enter y-coord: "))-1
+                    x = int(input("Choose piece: enter x-coord: "))-1
+                    move = board[y][x]
+                    log.info(f"checking move field {y+1}, {x+1}")
+                    if type(move) == " ":
+                        log.info("check pass")
+                        # Put piece at the new position
+                        board[y][x] = piece
+                        
+                        log.info("Remove piece from old position")
+                        # Remove piece from old position
+                        piece_previous_x, piece_previous_y = piece.get_xy()
+                        board[piece_previous_y][piece_previous_x] = " "
+                        
+                        # Set new x and y for piece
+                        piece.set_yx(y,x)
+
+                        if piece.y == 7 and piece.is_white == True:
+                            piece.set_king()
+                        if piece.y == 0 and piece.is_white == False:
+                            piece.set_king()
+                        log.info(f"piece was moved to {y-1}, {x-1}")
+                log.debug(f"check_jump: {temp}")
+                break
+            else: print(f"There is no piece with typed coords.\n")
+
+        except IndexError:
+            print(f"There is no piece with typed coords.\n")
+
