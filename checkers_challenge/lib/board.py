@@ -322,10 +322,10 @@ def piece_move(piece_move_object):
     # Set new x and y for piece
     piece.set_yx(y,x)
 
-    if piece.y == 7 and piece.is_white == True:
-        piece.set_king()
-    if piece.y == 0 and piece.is_white == False:
-        piece.set_king()
+    # if piece.y == 7 and piece.is_white == True:
+    #     piece.set_king()
+    # if piece.y == 0 and piece.is_white == False:
+    #     piece.set_king()
 
 
 # Prints board on the screen
