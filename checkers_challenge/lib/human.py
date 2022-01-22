@@ -34,7 +34,7 @@ def fields_loop():
                 # Instructions for white pieces
                 piece = field
 
-                if piece.is_white: # czesc kodu uzywana tylko przy AI vs AI
+                if piece.is_white:
 
                     # Check all possible moves
                     # moves = check_move(piece, 1)
@@ -75,7 +75,11 @@ def manual_turn():
                     if move in jumps:
                         log.info(f"make jump")
                         make_jump(piece, 1)
-                        return False
+                        print_board()
+                        if not fields_loop():
+                            jumps = check_jump(piece, 1)
+                            if len(jumps) == 0:
+                                return False
 
 
 

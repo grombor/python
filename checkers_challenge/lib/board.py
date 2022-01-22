@@ -308,16 +308,24 @@ def make_move_object(piece, moves):
 
 def piece_move(piece_move_object):
 
+    log.info('piece_move')
+
     y = piece_move_object[0][1]
     x = piece_move_object[0][2]
     piece = piece_move_object[1]
+    log.debug(f'piece: {piece} y:{piece.y+1}, x:{piece.x+1}')
+
 
     # Put piece at the new position
     board[y][x] = piece
+    log.debug(f'piece_move new posision: {piece.y+1}, {piece.x+1}')
+
     
     # Remove piece from old position
     piece_previous_x, piece_previous_y = piece.get_xy()
     board[piece_previous_y][piece_previous_x] = " "
+    log.debug(f'old posision: {piece_previous_y+1}, {piece_previous_x+1}')
+
     
     # Set new x and y for piece
     piece.set_yx(y,x)
@@ -359,67 +367,41 @@ def set_board(new_board):
 # value "True" means its white turn
 def board_loop(is_white):
         
-    
+    def pick_move(all_possible_moves):
+        return randrange(len(all_possible_moves))
 
     # Sorting function for moves list desc
-    def sort_fun(e):
-        return e[0][0]
+    # def sort_fun(e):
+    #     return e[0][0]
 
     
 
-    # Function is iterating piece by piece checking field is piece or not. Performs moves check for each piece and make move proposition
+    # Function is iterating piece by piece checking field is piece or not. Performs moves check for each piece and make move 
     def fields_loop():
+        
         for field in rows:
 
-                # Check if field has piece on it <--- chyba bez sensu zalozenie, ale dziala
-                if type(field)!= str:
+            if (type(field) == Piece) and (not field.is_white):
+                
+                # ckeck all possible moves
+                moves = check_move(field, -1)
 
-                    # Instructions for white pieces
-                    piece = field
-
-                    if piece.is_white: # czesc kodu uzywana tylko przy AI vs AI
-                        pass
-
-                #         # Check all possible moves
-                #         # moves = check_move(piece, 1)
+                # Checks possible jumps
+                jumps = check_jump(field, -1)
                         
-                #         # Checks possible jumps
-                #         jumps = check_jump(piece, 1)
+                # Make jump if possible
+                if len(jumps)>0:
+                    make_jump(field, -1)
+                    moves.clear()
+                    return False
 
-                #         # Check possible jumps
-                #         if len(jumps)>0:
-                #             # make_move_object(piece, jumps)
-                #             return True
+                make_move_object(field, moves)
 
-                    #     # Add move object [possible_move, piece_reference] to the global list of the all possible moves
-                    #     elif len(moves)>0:
-                    #         make_move_object(piece, moves)
-
-
-                    # Instructions for black pieces
-                    else:
-
-                        # ckeck all possible moves
-                        moves = check_move(piece, -1)
-
-                        # Checks possible jumps
-                        jumps = check_jump(piece, -1)
-                        
-
-                        # Check possible jumps
-                        if len(jumps)>0:
-                            make_jump(piece, -1)
-
-                        # Add move object [possible_move, piece_reference] to the global list of the all possible moves
-                        elif len(moves)>0:
-                            make_move_object(piece, moves)
-
-                # Instructions for empty field (without piece on it)
-                elif field == " ":
-                    pass
 
     # Loop for white pieces
     if is_white != True:
+
+        log.info(f"black turn")
         # Iterate for each row from down to up
         for rows in reversed(board):
             # Iterate for each field in a row
@@ -427,9 +409,19 @@ def board_loop(is_white):
     
         # Sort list by move priority
         #all_possible_moves.sort(reverse=True, key=sort_fun) #no needed anymore
+
+        if len(all_possible_moves) == 0:
+            return False
         
+        pmove = pick_move(all_possible_moves)
+
+        log.debug(f"len of allpossiblemoves: {len(all_possible_moves)}")
+        log.debug(f"pick of allpossiblemoves: {pmove}, {all_possible_moves[pmove]}")
+
         # Pick the highest priority move
-        next_move = all_possible_moves[0]
+        next_move = all_possible_moves[pmove]
+
+        log.debug(f"next move: {next_move}")
 
         # Move piece on the board
         piece_move(next_move)
@@ -438,7 +430,7 @@ def board_loop(is_white):
         all_possible_moves.clear()
 
     # Loop for black pieces
-    elif is_white:
+    if is_white:
         for rows in board:
             fields_loop()
         
