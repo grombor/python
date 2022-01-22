@@ -1,4 +1,3 @@
-from asyncio.log import logger
 from .piece import Piece
 from random import randrange
 from loguru import logger as log
@@ -130,6 +129,12 @@ def generate_pieces():
 
 # Check is jump possible
 def check_jump(piece, move_direction):
+    """
+        Function takes piece instance nad move direction (+1 for white pieces going down on the board; -1 for black pieces going up on the board). Checks is any possibility of jumps.
+
+    """
+
+
     y = piece.y
     x = piece.x
     has_jump = []
@@ -154,23 +159,32 @@ def check_jump(piece, move_direction):
                 # Go to next row, check is a free field here
                 new_y = y+2*move_direction
                 new_x = left-1
-                if (new_y in range(8)) and new_x in range(8):
+                if new_y in range(8) and new_x in range(8):
+
+                    # Get the next row diagonal left field
                     next_field = board[new_y][new_x]
 
+                    if next_field == " ":
+                        log.info(f"bicie na polu: {new_y+1}, {new_x+1}")
+                        next_move = [2, new_y, new_x]
+                        has_jump.append(next_move)
+
                     # Check if field in on the board
-                    if type(next_field) == str and (y in range(8)) and (x in range(8)):
+                    # if y in range(8) and x in range(8):
                         
-                        if next_field == " ":
-                            has_jump.append([2,new_y,new_x])
+                    #     if next_field == " ":
+                    #         has_jump.append([2,new_y,new_x])
+
+                    #         log.info(f"bicie: {has_jump[-1]}")
                             
                             #Remove jumped piece from the board
-                            board[field.y][field.x] = " "
-                            set_board(board)
+                            # board[field.y][field.x] = " "
+                            # set_board(board)
 
-                            temp_piece = Piece(new_x, new_y, piece.is_white)
-                            temp = check_jump(temp_piece, move_direction)
-                            if len(temp)>0:
-                                return temp
+                            # temp_piece = Piece(new_x, new_y, piece.is_white)
+                            # temp = check_jump(temp_piece, move_direction)
+                            # if len(temp)>0:
+                            #     return temp
 
 
 
@@ -183,28 +197,68 @@ def check_jump(piece, move_direction):
             # Check is the different color than current piece
             if type(field) == Piece and field.is_white != piece.is_white:
 
-                # Go to next row, check is a free field here
+                # Go to next row next field on the right
                 new_y = y+2*move_direction
                 new_x = right+1
-                if (new_y in range(8)) and new_x in range(8):
+                if new_y in range(8) and new_x in range(8):
                     next_field = board[new_y][new_x]
 
+                    if next_field == " ":
+                        log.info(f"bicie na polu: {new_y+1}, {new_x+1}")
+                        next_move = [2, new_y, new_x]
+                        has_jump.append(next_move)
+
                     # Check if field in on the board
-                    if type(next_field) == str and (y in range(8)) and (x in range(8)):
+                    # if type(next_field) == str and (y in range(8)) and (x in range(8)):
                         
-                        if next_field == " ":
-                            has_jump.append([2,new_y,new_x])
+                    #     # If next row field is empty
+                    #     if next_field == " ":
+                    #         has_jump.append([2,new_y,new_x])
+
+                    #         log.info(f"bicie: {has_jump[-1]}")
                                                         
                             #Remove jumped piece from the board
-                            board[field.y][field.x] = " "
-                            set_board(board)
+                            # board[field.y][field.x] = " "
+                            # set_board(board)
 
-                            temp_piece = Piece(new_x, new_y, piece.is_white)
-                            temp = check_jump(temp_piece, move_direction)
-                            if len(temp)>0:
-                                return temp
+                            # temp_piece = Piece(new_x, new_y, piece.is_white)
+                            # temp = check_jump(temp_piece, move_direction)
+                            # if len(temp)>0:
+                            #     return temp
 
     return has_jump
+
+
+def make_jump(piece, move_direction):
+    next_moves = check_jump(piece, move_direction)
+    n_board = get_board()
+    if len(next_moves)>0:
+        log.info(f"make_jump! z mozliwych: {next_moves}")
+        # Choose move
+        move = randrange(0,len(next_moves))
+        log.info(f"wybieram ruch: {next_moves[move]}")
+
+        log.info(f"x pionka do usuniecia next_moves[move]: {next_moves[move][2]}")
+
+        y = int(piece.y)+int(move_direction)
+        x = int((int(next_moves[move][2])+int(piece.x))/2)
+
+        piece_to_delete = n_board[y][x]
+        log.info(f"usuwam pionek: y:{piece_to_delete}")
+
+        n_board[y][x] = " "
+        log.debug(f"pionek po susunieciu: {n_board[y][x]}")
+
+        log.info(f"usuwam kolejny pionek: {piece.y}, {piece.x}")
+        n_board[piece.y][piece.x] = " "
+
+
+        y = next_moves[move][1]
+        x = next_moves[move][2]
+        log.info(f"przesuwam pionke na: y:{y}, x: {x}")
+        piece.set_yx(y, x)
+        n_board[y][x] = piece
+        set_board(n_board)
 
 
 # Checks all possible moves for piece, return list where sublist is [priority, y, x]
@@ -278,6 +332,8 @@ def piece_move(piece_move_object):
 def print_board():
 
     # Numerators for the board
+    print("\n")
+
     columns_numerators = [" 1", " 2", "3", "4 ", "5" , "6 ", "7 ", "8 "]
     print(*columns_numerators)
     i = 0
@@ -300,12 +356,12 @@ def set_board(new_board):
 
 
 # Loop iterating through all pieces from most distant to the nearest row.
-# if is_white = True => means its white turn
+# value "True" means its white turn
 def board_loop(is_white):
         
     
 
-    # Sorting function
+    # Sorting function for moves list desc
     def sort_fun(e):
         return e[0][0]
 
@@ -315,27 +371,29 @@ def board_loop(is_white):
     def fields_loop():
         for field in rows:
 
-                # Check if field has piece on it
+                # Check if field has piece on it <--- chyba bez sensu zalozenie, ale dziala
                 if type(field)!= str:
 
                     # Instructions for white pieces
                     piece = field
 
-                    if piece.is_white:
+                    if piece.is_white: # czesc kodu uzywana tylko przy AI vs AI
+                        pass
 
-                        # Check all possible moves
-                        moves = check_move(piece, 1)
+                #         # Check all possible moves
+                #         # moves = check_move(piece, 1)
                         
-                        # Checks possible jumps
-                        jumps = check_jump(piece, 1)
+                #         # Checks possible jumps
+                #         jumps = check_jump(piece, 1)
 
-                        # Check possible jumps
-                        if len(jumps)>0:
-                            make_move_object(piece, jumps)
+                #         # Check possible jumps
+                #         if len(jumps)>0:
+                #             # make_move_object(piece, jumps)
+                #             return True
 
-                        # Add move object [possible_move, piece_reference] to the global list of the all possible moves
-                        elif len(moves)>0:
-                            make_move_object(piece, moves)
+                    #     # Add move object [possible_move, piece_reference] to the global list of the all possible moves
+                    #     elif len(moves)>0:
+                    #         make_move_object(piece, moves)
 
 
                     # Instructions for black pieces
@@ -346,10 +404,11 @@ def board_loop(is_white):
 
                         # Checks possible jumps
                         jumps = check_jump(piece, -1)
+                        
 
                         # Check possible jumps
                         if len(jumps)>0:
-                            make_move_object(piece, jumps)
+                            make_jump(piece, -1)
 
                         # Add move object [possible_move, piece_reference] to the global list of the all possible moves
                         elif len(moves)>0:
@@ -367,7 +426,7 @@ def board_loop(is_white):
             fields_loop()
     
         # Sort list by move priority
-        all_possible_moves.sort(reverse=True, key=sort_fun)
+        #all_possible_moves.sort(reverse=True, key=sort_fun) #no needed anymore
         
         # Pick the highest priority move
         next_move = all_possible_moves[0]
@@ -384,7 +443,7 @@ def board_loop(is_white):
             fields_loop()
         
         # Sort list by move priority
-        all_possible_moves.sort(reverse=True, key=sort_fun)
+        #all_possible_moves.sort(reverse=True, key=sort_fun) #no needed anymore
         
         # Pick the highest priority move
         next_move = all_possible_moves[0]

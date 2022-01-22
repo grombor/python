@@ -1,5 +1,6 @@
 from lib.board import board_loop, piece_move, generate_pieces, print_board, set_board, board
 from lib.human import manual_turn
+from time import sleep
 
 if __name__ == "__main__":
 
@@ -22,14 +23,15 @@ if __name__ == "__main__":
 
         print(f"\n################# {turn_counter}. turn #################\n")
 
-        print("\nPlayer's turn:")
+        print("\nPlayer's turn:\n")
 
         print_board()
         manual_turn()
         print_board()
 
-        print("\nComputers turn:")
-        board_loop(False)
+        print("\nComputers turn:\n")
+        sleep(1.5)
+        board_loop(False) # Value "False" indicates to make move as Black Pieces
 
 
 
