@@ -2,16 +2,24 @@ from lib.board import print_board, check_jump, check_move, get_board, make_move_
 from lib.piece import Piece
 from loguru import logger as log
 
+def get_piece(board):
+    try:
+        y = int(input("\nChoose piece: enter y-coord for piece: "))-1
+        x = int(input("Choose piece: enter x-coord for piece: \n"))-1
+        piece = board[y][x]
+        return piece
+    except IndexError:
+        print(f"There is no piece with typed coords.\n")
+
+
 def manual_turn():
     board = get_board()
     all_possible_moves = []
-    print("White pieces turn now. It is your turn.\n")
+    print("\nWhite pieces turn now. It is your turn.\n")
     while True:
-        print_board()
+        # print_board()
         try:
-            y = int(input("\nChoose piece: enter y-coord for piece: "))-1
-            x = int(input("Choose piece: enter x-coord for piece: "))-1
-            piece = board[y][x]
+            piece = get_piece(board)
 
             if type(piece) == Piece and piece.is_white == True:
                 jumps = check_jump(piece, 1)
@@ -29,7 +37,7 @@ def manual_turn():
                     # Clear moves list
                     all_possible_moves.clear()
 
-                    print_board()
+                    # print_board()
                     break
 
                 else:

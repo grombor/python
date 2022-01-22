@@ -8,6 +8,7 @@ if __name__ == "__main__":
 
     # white = True
 
+    # Code for AI vs AI battle
     # for i in range(20):
     #     print(f"\n################# {i+1}. turn #################\n")
     #     print_board()
@@ -18,11 +19,17 @@ if __name__ == "__main__":
 
     while True:
         turn_counter += 1
+
         print(f"\n################# {turn_counter}. turn #################\n")
-        manual_turn()
-        print("Computer turn:")
-        board_loop(False)
+
+        print("\nPlayer's turn:")
+
         print_board()
+        manual_turn()
+        print_board()
+
+        print("\nComputers turn:")
+        board_loop(False)
 
 
 
