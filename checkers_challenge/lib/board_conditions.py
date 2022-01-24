@@ -35,7 +35,7 @@ def check_pieces_on_board():
     #Count white pieces
     white_pieces = count_pieces(board, True)
     if white_pieces == 0:
-        print("Computer win!")
+        print("Player win!")
         quit()
 
     #Count black pieces
