@@ -1,7 +1,6 @@
 from dataclasses import field
 from lib.board import make_jump, print_board, check_jump, check_move, get_board, make_move_object, piece_move
 from lib.piece import Piece
-from loguru import logger as log
 
 # Get y and y coord from player
 def get_coords():
@@ -57,14 +56,12 @@ def manual_turn():
             #field loop for players pieces
             if fields_loop():
                 while True:
-                    log.info("There is an obligatory jump!")
 
                     # Get piece
                     piece = get_piece(board)
                                     
                     # Checks possible jumps
                     jumps = check_jump(piece, 1)
-                    log.debug(f"jumps: {jumps}")
 
                     # Get move coords
                     print("\n Where to move?\n")
@@ -73,7 +70,6 @@ def manual_turn():
 
                     #Check is move coords are in jump coords
                     if move in jumps:
-                        log.info(f"make jump")
                         make_jump(piece, 1)
                         print_board()
                         if not fields_loop():
@@ -83,31 +79,15 @@ def manual_turn():
 
 
 
-
-
             piece = get_piece(board)
 
             if type(piece)== Piece and piece.is_white == True:
-                #NEW CODE for jumps
                 
                 # Check all possible moves
                 moves = check_move(piece, 1)
                 
                 # Checks possible jumps
-                # jumps = check_jump(piece, 1)
 
-                log.debug(f"moves: {moves}")
-                        
-
-                # Check possible jumps
-                # if len(jumps)>0:
-                #     log.info(f"masz obowiazkowe bicie")
-                #     make_jump(piece, -1)
-                #     break
-
-                # NEW CODE for standard moving
-
-                log.debug(f"check_move(piece, 1): {moves}")
 
                 print("\n Where to move?\n")
                 y, x = get_coords()

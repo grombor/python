@@ -36,11 +36,13 @@ def check_pieces_on_board():
     white_pieces = count_pieces(board, True)
     if white_pieces == 0:
         print("Computer win!")
+        quit()
 
     #Count black pieces
     black_pieces = count_pieces(board, False)
     if black_pieces == 0:
         print("Computer win!")
+        quit()
 
     #Check for kings
     check_kings(board)

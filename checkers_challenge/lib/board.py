@@ -1,6 +1,5 @@
 from .piece import Piece
 from random import randrange
-from loguru import logger as log
 
 """
 Checkers board is a list of 8 rows list
@@ -165,7 +164,6 @@ def check_jump(piece, move_direction):
                     next_field = board[new_y][new_x]
 
                     if next_field == " ":
-                        log.info(f"bicie na polu: {new_y+1}, {new_x+1}")
                         next_move = [2, new_y, new_x]
                         has_jump.append(next_move)
 
@@ -204,7 +202,6 @@ def check_jump(piece, move_direction):
                     next_field = board[new_y][new_x]
 
                     if next_field == " ":
-                        log.info(f"bicie na polu: {new_y+1}, {new_x+1}")
                         next_move = [2, new_y, new_x]
                         has_jump.append(next_move)
 
@@ -233,29 +230,19 @@ def make_jump(piece, move_direction):
     next_moves = check_jump(piece, move_direction)
     n_board = get_board()
     if len(next_moves)>0:
-        log.info(f"make_jump! z mozliwych: {next_moves}")
         # Choose move
         move = randrange(0,len(next_moves))
-        log.info(f"wybieram ruch: {next_moves[move]}")
-
-        log.info(f"x pionka do usuniecia next_moves[move]: {next_moves[move][2]}")
 
         y = int(piece.y)+int(move_direction)
         x = int((int(next_moves[move][2])+int(piece.x))/2)
 
-        piece_to_delete = n_board[y][x]
-        log.info(f"usuwam pionek: y:{piece_to_delete}")
-
         n_board[y][x] = " "
-        log.debug(f"pionek po susunieciu: {n_board[y][x]}")
 
-        log.info(f"usuwam kolejny pionek: {piece.y}, {piece.x}")
         n_board[piece.y][piece.x] = " "
 
 
         y = next_moves[move][1]
         x = next_moves[move][2]
-        log.info(f"przesuwam pionke na: y:{y}, x: {x}")
         piece.set_yx(y, x)
         n_board[y][x] = piece
         set_board(n_board)
@@ -308,25 +295,18 @@ def make_move_object(piece, moves):
 
 def piece_move(piece_move_object):
 
-    log.info('piece_move')
 
     y = piece_move_object[0][1]
     x = piece_move_object[0][2]
     piece = piece_move_object[1]
-    log.debug(f'piece: {piece} y:{piece.y+1}, x:{piece.x+1}')
-
 
     # Put piece at the new position
     board[y][x] = piece
-    log.debug(f'piece_move new posision: {piece.y+1}, {piece.x+1}')
 
-    
     # Remove piece from old position
     piece_previous_x, piece_previous_y = piece.get_xy()
     board[piece_previous_y][piece_previous_x] = " "
-    log.debug(f'old posision: {piece_previous_y+1}, {piece_previous_x+1}')
 
-    
     # Set new x and y for piece
     piece.set_yx(y,x)
 
@@ -370,11 +350,6 @@ def board_loop(is_white):
     def pick_move(all_possible_moves):
         return randrange(len(all_possible_moves))
 
-    # Sorting function for moves list desc
-    # def sort_fun(e):
-    #     return e[0][0]
-
-    
 
     # Function is iterating piece by piece checking field is piece or not. Performs moves check for each piece and make move 
     def fields_loop():
@@ -401,27 +376,20 @@ def board_loop(is_white):
     # Loop for white pieces
     if is_white != True:
 
-        log.info(f"black turn")
         # Iterate for each row from down to up
         for rows in reversed(board):
             # Iterate for each field in a row
             fields_loop()
-    
-        # Sort list by move priority
-        #all_possible_moves.sort(reverse=True, key=sort_fun) #no needed anymore
 
         if len(all_possible_moves) == 0:
             return False
         
         pmove = pick_move(all_possible_moves)
 
-        log.debug(f"len of allpossiblemoves: {len(all_possible_moves)}")
-        log.debug(f"pick of allpossiblemoves: {pmove}, {all_possible_moves[pmove]}")
 
         # Pick the highest priority move
         next_move = all_possible_moves[pmove]
 
-        log.debug(f"next move: {next_move}")
 
         # Move piece on the board
         piece_move(next_move)
@@ -434,8 +402,6 @@ def board_loop(is_white):
         for rows in board:
             fields_loop()
         
-        # Sort list by move priority
-        #all_possible_moves.sort(reverse=True, key=sort_fun) #no needed anymore
         
         # Pick the highest priority move
         next_move = all_possible_moves[0]
