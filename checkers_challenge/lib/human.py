@@ -2,7 +2,6 @@ from dataclasses import field
 from lib.board import make_jump, print_board, check_jump, check_move, get_board, make_move_object, piece_move
 from lib.piece import Piece
 
-from loguru import logger as log
 
 # Get y and y coord from player
 def get_coords():
@@ -68,7 +67,6 @@ def manual_turn():
 
                         print("\nYou have possible jump to do.")
 
-                        log.debug(f"jumps: {jumps}")
 
                         # Get move coords
                         print("\n Where to move?\n")

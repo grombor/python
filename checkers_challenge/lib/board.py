@@ -2,7 +2,6 @@ from py import log
 from .piece import Piece
 from random import randrange
 
-from loguru import logger as log
 
 """
 Checkers board is a list of 8 rows list
@@ -220,7 +219,6 @@ def make_jump(piece, move_direction):
 # move_direction = 1 --> move down
 # move direction = -1 --> move up
 def check_move(piece, move_direction):
-    log.info(f"check_move(piece, move_direction):")
     y = piece.y + move_direction
     x = piece.x
     next_move = []
@@ -263,7 +261,6 @@ def make_move_object(piece, moves):
 
 
 def piece_move(piece_move_object):
-    log.info(f"piece_move(piece_move_object):")
 
     y = piece_move_object[0][1]
     x = piece_move_object[0][2]
@@ -319,7 +316,6 @@ def board_loop(is_white):
     def fields_loop():
         global has_jumped
 
-        log.info("fields_loop():")
         
         for field in rows:
 
@@ -340,7 +336,6 @@ def board_loop(is_white):
                     return False
 
 
-                log.debug(f"has_jumped {has_jumped}")
                 make_move_object(field, moves)
 
 
@@ -348,7 +343,6 @@ def board_loop(is_white):
     if is_white != True:
         global has_jumped
         has_jumped = False
-        log.info("# Loop for black pieces")
 
         # Iterate for each row from down to up
         for rows in reversed(board):
@@ -359,14 +353,11 @@ def board_loop(is_white):
             return False
         
         pmove = pick_move(all_possible_moves)
-        log.info("pmove = pick_move(all_possible_moves)")
 
         # Pick the highest priority move
         next_move = all_possible_moves[pmove]
-        log.info("next_move = all_possible_moves[pmove]")
 
 
-        log.debug(f"has_jumped: {has_jumped}")
         # Move piece on the board
         if not has_jumped:
             piece_move(next_move)
@@ -374,25 +365,5 @@ def board_loop(is_white):
         # Clear moves list
         all_possible_moves.clear()
 
-        log.info("all_possible_moves.clear()")
 
-    # Loop for black pieces
-    # log.info("# Loop for white pieces")
-    # if is_white:
-    #     for rows in board:
-    #         fields_loop()
-        
-        
-    #     # Pick the highest priority move
-    #     next_move = all_possible_moves[0]
-    #     log.info("next_move = all_possible_moves[0]")
-
-    #     # Move piece on the board
-    #     piece_move(next_move)
-    #     log.info("piece_move(next_move)")
-
-    #     log.info(f"piece_move(next_move)")
-
-    #     # Clear moves list
-    #     all_possible_moves.clear()
 
