@@ -1,5 +1,8 @@
+from py import log
 from .piece import Piece
 from random import randrange
+
+from loguru import logger as log
 
 """
 Checkers board is a list of 8 rows list
@@ -15,6 +18,7 @@ Top row belong to white pieces, down ones for black pieces.
 """
 board = []
 all_possible_moves = []
+has_jumped = False
 
 def get_board():
     return board
@@ -167,24 +171,6 @@ def check_jump(piece, move_direction):
                         next_move = [2, new_y, new_x]
                         has_jump.append(next_move)
 
-                    # Check if field in on the board
-                    # if y in range(8) and x in range(8):
-                        
-                    #     if next_field == " ":
-                    #         has_jump.append([2,new_y,new_x])
-
-                    #         log.info(f"bicie: {has_jump[-1]}")
-                            
-                            #Remove jumped piece from the board
-                            # board[field.y][field.x] = " "
-                            # set_board(board)
-
-                            # temp_piece = Piece(new_x, new_y, piece.is_white)
-                            # temp = check_jump(temp_piece, move_direction)
-                            # if len(temp)>0:
-                            #     return temp
-
-
 
         if right in range(8):
 
@@ -204,24 +190,6 @@ def check_jump(piece, move_direction):
                     if next_field == " ":
                         next_move = [2, new_y, new_x]
                         has_jump.append(next_move)
-
-                    # Check if field in on the board
-                    # if type(next_field) == str and (y in range(8)) and (x in range(8)):
-                        
-                    #     # If next row field is empty
-                    #     if next_field == " ":
-                    #         has_jump.append([2,new_y,new_x])
-
-                    #         log.info(f"bicie: {has_jump[-1]}")
-                                                        
-                            #Remove jumped piece from the board
-                            # board[field.y][field.x] = " "
-                            # set_board(board)
-
-                            # temp_piece = Piece(new_x, new_y, piece.is_white)
-                            # temp = check_jump(temp_piece, move_direction)
-                            # if len(temp)>0:
-                            #     return temp
 
     return has_jump
 
@@ -252,6 +220,7 @@ def make_jump(piece, move_direction):
 # move_direction = 1 --> move down
 # move direction = -1 --> move up
 def check_move(piece, move_direction):
+    log.info(f"check_move(piece, move_direction):")
     y = piece.y + move_direction
     x = piece.x
     next_move = []
@@ -294,7 +263,7 @@ def make_move_object(piece, moves):
 
 
 def piece_move(piece_move_object):
-
+    log.info(f"piece_move(piece_move_object):")
 
     y = piece_move_object[0][1]
     x = piece_move_object[0][2]
@@ -309,11 +278,6 @@ def piece_move(piece_move_object):
 
     # Set new x and y for piece
     piece.set_yx(y,x)
-
-    # if piece.y == 7 and piece.is_white == True:
-    #     piece.set_king()
-    # if piece.y == 0 and piece.is_white == False:
-    #     piece.set_king()
 
 
 # Prints board on the screen
@@ -353,10 +317,14 @@ def board_loop(is_white):
 
     # Function is iterating piece by piece checking field is piece or not. Performs moves check for each piece and make move 
     def fields_loop():
+        global has_jumped
+
+        log.info("fields_loop():")
         
         for field in rows:
 
             if (type(field) == Piece) and (not field.is_white):
+
                 
                 # ckeck all possible moves
                 moves = check_move(field, -1)
@@ -368,13 +336,19 @@ def board_loop(is_white):
                 if len(jumps)>0:
                     make_jump(field, -1)
                     moves.clear()
+                    has_jumped = True
                     return False
 
+
+                log.debug(f"has_jumped {has_jumped}")
                 make_move_object(field, moves)
 
 
     # Loop for white pieces
     if is_white != True:
+        global has_jumped
+        has_jumped = False
+        log.info("# Loop for black pieces")
 
         # Iterate for each row from down to up
         for rows in reversed(board):
@@ -385,30 +359,40 @@ def board_loop(is_white):
             return False
         
         pmove = pick_move(all_possible_moves)
-
+        log.info("pmove = pick_move(all_possible_moves)")
 
         # Pick the highest priority move
         next_move = all_possible_moves[pmove]
+        log.info("next_move = all_possible_moves[pmove]")
 
 
+        log.debug(f"has_jumped: {has_jumped}")
         # Move piece on the board
-        piece_move(next_move)
+        if not has_jumped:
+            piece_move(next_move)
 
         # Clear moves list
         all_possible_moves.clear()
+
+        log.info("all_possible_moves.clear()")
 
     # Loop for black pieces
-    if is_white:
-        for rows in board:
-            fields_loop()
+    # log.info("# Loop for white pieces")
+    # if is_white:
+    #     for rows in board:
+    #         fields_loop()
         
         
-        # Pick the highest priority move
-        next_move = all_possible_moves[0]
+    #     # Pick the highest priority move
+    #     next_move = all_possible_moves[0]
+    #     log.info("next_move = all_possible_moves[0]")
 
-        # Move piece on the board
-        piece_move(next_move)
+    #     # Move piece on the board
+    #     piece_move(next_move)
+    #     log.info("piece_move(next_move)")
 
-        # Clear moves list
-        all_possible_moves.clear()
+    #     log.info(f"piece_move(next_move)")
+
+    #     # Clear moves list
+    #     all_possible_moves.clear()
 

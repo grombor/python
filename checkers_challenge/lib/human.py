@@ -2,6 +2,8 @@ from dataclasses import field
 from lib.board import make_jump, print_board, check_jump, check_move, get_board, make_move_object, piece_move
 from lib.piece import Piece
 
+from loguru import logger as log
+
 # Get y and y coord from player
 def get_coords():
     y = int(input("\nTo find field on the board: enter y-coord: "))-1
@@ -31,15 +33,15 @@ def fields_loop():
             if type(field)!= str:
 
                 # Instructions for white pieces
-                piece = field
+                field
 
-                if piece.is_white:
+                if field.is_white:
 
                     # Check all possible moves
                     # moves = check_move(piece, 1)
                     
                     # Checks possible jumps
-                    jumps = check_jump(piece, 1)
+                    jumps = check_jump(field, 1)
 
                     # Check possible jumps
                     if len(jumps)>0:
@@ -60,22 +62,28 @@ def manual_turn():
                     # Get piece
                     piece = get_piece(board)
                                     
-                    # Checks possible jumps
-                    jumps = check_jump(piece, 1)
+                    if type(piece) == Piece:
+                        # Checks possible jumps
+                        jumps = check_jump(piece, 1)
 
-                    # Get move coords
-                    print("\n Where to move?\n")
-                    y, x = get_coords()
-                    move = [2, y, x]
+                        print("\nYou have possible jump to do.")
 
-                    #Check is move coords are in jump coords
-                    if move in jumps:
-                        make_jump(piece, 1)
-                        print_board()
-                        if not fields_loop():
-                            jumps = check_jump(piece, 1)
-                            if len(jumps) == 0:
-                                return False
+                        log.debug(f"jumps: {jumps}")
+
+                        # Get move coords
+                        print("\n Where to move?\n")
+                        y, x = get_coords()
+                        move = [2, y, x]
+
+                        #Check is move coords are in jump coords
+                        if move in jumps:
+                            make_jump(piece, 1)
+                            print_board()
+                            if not fields_loop():
+                                jumps = check_jump(piece, 1)
+                                if len(jumps) == 0:
+                                    return False
+                    else: print("Invalid coords / piece.")
 
 
 
