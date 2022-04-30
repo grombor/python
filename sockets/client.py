@@ -1,14 +1,20 @@
-# echo-client.py
-
 import socket
 
-HOST = "127.0.0.1"  # The server's hostname or IP address
-PORT = 5001  # The port used by the server
+HOST = socket.gethostname()
+PORT = 5001
+HEADER_SIZE = 1024
+CODING = 'utf-8'
 
-with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-    s.connect((HOST, PORT))
-    s.sendall(b"Hello, world")
-    data = s.recv(1024)
+socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+socket.connect((HOST, PORT))
 
-print(f"Received {data!r}")
+while True:
+    msg = socket.recv(HEADER_SIZE).decode(CODING)
+    if msg == "Server was stopped by client.":
+        print("Shutting down server and client connection.")
+        quit()
+    print(msg)
+    user_input = input("Command:\n")
+    msg = user_input.encode(CODING)
+    socket.send(msg)
 
