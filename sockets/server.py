@@ -8,17 +8,9 @@
 # Simple echo server
 
 import socket
-from datetime import datetime
 from server_files.commands_list import get_commands_list
-from server_files.server_functions import show_help
-
-HOST = socket.gethostname()
-PORT = 5001
-HEADER_SIZE = 1024
-CODING = "utf-8"
-UPTIME = datetime.now()
-VERSION = "1.0.0"
-
+from server_files.server_functions import show_help, show_info, show_uptime, show_unknown_command, stop_server
+from server_files.server_config import *
 
 socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 socket.bind((HOST, PORT))
@@ -37,25 +29,25 @@ client_socket, client_address = socket.accept()
 print(f"Connection from {client_address[0]}:{client_address[1]} has been established.")
 client_socket.send(msg)
 while True:
-    msg = client_socket.recv(HEADER_SIZE).decode(CODING)
+    msg = client_socket.recv(HEADER_SIZE).decode(CODING).lower()
     if msg in get_commands_list().keys():
-        if msg in ("--quit", "--stop"):
-            msg = "Server was stopped by client.".encode(CODING)
+        if msg in ("quit", "stop"):
+            msg = stop_server()
             print(msg)
             client_socket.send(msg)
             client_socket.close()
             break
-        if msg == "--help":
-            msg = show_help(get_commands_list()).encode(CODING)
+        if msg == "help":
+            msg = show_help()
             client_socket.send(msg)
-        if msg == "--info":
-            msg = f"Current server version is: {VERSION}".encode(CODING)
+        if msg == "info":
+            msg = show_info()
             client_socket.send(msg)
-        if msg == "--uptime":
-            msg = f"The server is online since: {UPTIME}".encode(CODING)
+        if msg == "uptime":
+            msg = show_uptime()
             client_socket.send(msg)
     else:
-        msg = bytes("Unknow command. Try type --help for more info.", CODING)
+        msg = show_unknown_command()
         client_socket.send(msg)
 
 
