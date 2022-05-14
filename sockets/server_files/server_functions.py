@@ -1,6 +1,7 @@
 import json
 from server_files.server_config import *
 from server_files.commands_list import get_commands_list
+import socket
 
 
 def show_help():
@@ -28,6 +29,24 @@ def show_unknown_command():
     return msg
 
 
-def stop_server():
+def stop_server(client_socket):
     msg = "Server was stopped by client.".encode(CODING)
-    return msg
+    print(msg)
+    client_socket.send(msg)
+    client_socket.close()
+    
+
+def handle_command(command, client_socket):
+    if command in ("quit", "stop"):
+        stop_server(client_socket)
+        quit()
+    if command == "help":
+        command = show_help()
+        client_socket.send(command)
+    if command == "info":
+        command = show_info()
+        client_socket.send(command)
+    if command == "uptime":
+        command = show_uptime()
+        client_socket.send(command)
+    pass

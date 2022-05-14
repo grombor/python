@@ -9,7 +9,7 @@
 
 import socket
 from server_files.commands_list import get_commands_list
-from server_files.server_functions import show_help, show_info, show_uptime, show_unknown_command, stop_server
+from server_files.server_functions import show_help, show_info, show_uptime, show_unknown_command, stop_server, handle_command
 from server_files.server_config import *
 
 socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -32,20 +32,10 @@ while True:
     msg = client_socket.recv(HEADER_SIZE).decode(CODING).lower()
     if msg in get_commands_list().keys():
         if msg in ("quit", "stop"):
-            msg = stop_server()
-            print(msg)
-            client_socket.send(msg)
-            client_socket.close()
+            handle_command(msg, client_socket)
             break
-        if msg == "help":
-            msg = show_help()
-            client_socket.send(msg)
-        if msg == "info":
-            msg = show_info()
-            client_socket.send(msg)
-        if msg == "uptime":
-            msg = show_uptime()
-            client_socket.send(msg)
+        elif msg in ("help", "info", "uptime"):
+            handle_command(msg, client_socket)
     else:
         msg = show_unknown_command()
         client_socket.send(msg)
