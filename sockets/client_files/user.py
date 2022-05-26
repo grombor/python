@@ -13,21 +13,25 @@ class User:
     message = ""
 
     def get_nickname(self) -> str:
+        """ Get nickname from user. """
         try:
-            nickname = input("Enter nickname: ")
-            return nickname
-            raise RuntimeError(f"ERROR: get_nickname error value: {nickname}")
+            self.nickname = input("Enter nickname: ")
+            return self.nickname
+            raise RuntimeError(f"ERROR: get_nickname error value: {self.nickname}")
         except RuntimeError as re:
             print(re)
 
 
     def login(self):
+        """ Printing welcome message."""
         self.nickname = self.get_nickname()
-        print("Logining in...")
         print(f"Hello {self.nickname}!")
+        print(f"Logining in to {HOST}...")
 
 
     def send_message(self):
+        """ Send message to server function. """
+
         self.message = input("Command: ")
         msg = {
             "nickname": self.nickname,
