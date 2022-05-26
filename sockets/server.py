@@ -6,10 +6,10 @@
 
 
 # Simple echo server
-
+import json
 import socket
 from server_files.commands_list import get_commands_list
-from server_files.server_functions import show_help, show_info, show_uptime, show_unknown_command, stop_server, handle_command
+from server_files.server_functions import handle_command, handle_message
 from server_files.server_config import *
 
 socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -29,15 +29,19 @@ client_socket, client_address = socket.accept()
 print(f"Connection from {client_address[0]}:{client_address[1]} has been established.")
 client_socket.send(msg)
 while True:
-    msg = client_socket.recv(HEADER_SIZE).decode(CODING).lower()
-    if msg in get_commands_list().keys():
-        if msg in ("quit", "stop"):
-            handle_command(msg, client_socket)
+    received_msg = json.loads(client_socket.recv(HEADER_SIZE))
+    nickname = received_msg["nickname"]
+    message = received_msg["message"]
+
+    if message in get_commands_list().keys():
+        if message in ("quit", "stop"):
+            handle_command(message, client_socket)
             break
-        elif msg in ("help", "info", "uptime"):
-            handle_command(msg, client_socket)
+        elif message in ("help", "info", "uptime"):
+            handle_command(message, client_socket)
     else:
-        msg = show_unknown_command()
-        client_socket.send(msg)
+        print(f"{nickname}: {message}")
+        handle_message("ok", client_socket)
+
 
 

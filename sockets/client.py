@@ -1,9 +1,17 @@
 import socket
 import json
-from server_files.server_config import *
+from client_files.user import User
+from client_files.config import *
+
 
 socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 socket.connect((HOST, PORT))
+
+
+user = User()
+
+user.login()
+
 
 while True:
     msg = socket.recv(HEADER_SIZE).decode(CODING)
@@ -11,7 +19,5 @@ while True:
         print("Shutting down server and client connection.")
         quit()
     print(msg)
-    user_input = input("Command: ")
-    msg = user_input.encode(CODING)
-    socket.send(msg)
+    socket.send(user.send_message())
 
