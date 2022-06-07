@@ -17,7 +17,6 @@ class User:
         try:
             self.nickname = input("Enter nickname: ")
             return self.nickname
-            raise RuntimeError(f"ERROR: get_nickname error value: {self.nickname}")
         except RuntimeError as re:
             print(re)
 

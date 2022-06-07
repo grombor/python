@@ -35,8 +35,11 @@ class Server:
     def stop_server(self, client_socket):
         """ Stop server function. """
 
-        msg = dict()
-        msg["message"] = "Server was stopped by client."
+        msg = {
+            "id": "server",
+            "message": 'Server stopped by the user. Shutting down server and client connection.',
+        }
+        print(json.dumps(msg).encode(CODING))
         client_socket.send(json.dumps(msg).encode(CODING))
         client_socket.close()
 
@@ -71,7 +74,7 @@ class Server:
     def greetings(self):
         """ Show greetings. """
 
-        return f"Welcome to the {HOST} server! :: Type '--help' for info.\n"
+        return f".:: Welcome to the {HOST} server! :: Type '--help' for info. ::.\n"
 
 
     def handle_message(self, client_socket, msg=""):
@@ -82,5 +85,4 @@ class Server:
             "message": msg
         }
         msg = json.dumps(msg).encode(CODING)
-        print(f"server: {msg}")
         client_socket.send(msg)

@@ -18,13 +18,13 @@ while True:
     # TODO: remove try/except, handle exception, test msg behavior
     try:
         msg = json.loads(socket.recv(HEADER_SIZE))
-        print(msg["message"])
+        if msg["message"] != '':
+            print(msg["message"])
     except Exception:
         pass
 
     # Turn off client right after server.
-    if msg["message"] == "Server was stopped by client.":
-        print("Shutting down server and client connection.")
+    if msg["message"] == 'Server stopped by the user. Shutting down server and client connection.':
         quit()
     socket.send(user.send_message())
 
