@@ -19,6 +19,7 @@ print(s.greetings())
 client_socket, client_address = socket.accept()
 print(f"Connection from {client_address[0]}:{client_address[1]} has been established.")
 
+# Send greetign to the connected client
 s.handle_message(client_socket, s.greetings())
 
 
@@ -39,8 +40,12 @@ while True:
             s.handle_command(message, client_socket)
     else:
         # User message logic
-        print(f"{nickname}: {message}")
-        s.handle_message(client_socket)
+        if s.is_admin(received_msg["nickname"]):
+            print(print(f"(admin) {nickname}: {message} +"))
+            s.handle_message(client_socket)
+        else:
+            print(f"{nickname}: {message}")
+            s.handle_message(client_socket)
 
 
 

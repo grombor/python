@@ -1,6 +1,7 @@
 import json
 from server_files.server_config import *
 from server_files.commands_list import get_commands_list, show_commands
+from server_files.users import admins
 
 
 class Server:
@@ -33,13 +34,13 @@ class Server:
 
 
     def stop_server(self, client_socket):
-        """ Stop server function. """
+        """ Stop server. """
 
         msg = {
             "id": "server",
             "message": 'Server stopped by the user. Shutting down server and client connection.',
         }
-        print(json.dumps(msg).encode(CODING))
+        print(msg['message'])
         client_socket.send(json.dumps(msg).encode(CODING))
         client_socket.close()
 
@@ -86,3 +87,11 @@ class Server:
         }
         msg = json.dumps(msg).encode(CODING)
         client_socket.send(msg)
+
+
+    def is_admin(self, nickname) -> bool:
+        if nickname in admins:
+            return True
+        else:
+            return False
+
