@@ -1,7 +1,7 @@
 import json
 from server_files.server_config import *
 from server_files.commands_list import get_commands_list, show_commands
-from server_files.users import admins
+from server_files.users import Users
 
 
 class Server:
@@ -90,7 +90,8 @@ class Server:
 
 
     def is_admin(self, nickname) -> bool:
-        if nickname in admins:
+        u = Users()
+        if nickname in u.get_admins():
             return True
         else:
             return False

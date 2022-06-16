@@ -20,8 +20,8 @@ while True:
         msg = json.loads(socket.recv(HEADER_SIZE))
         if msg["message"] != '':
             print(msg["message"])
-    except Exception:
-        pass
+    except Exception as e:
+        print(e)
 
     # Turn off client right after server.
     if msg["message"] == 'Server stopped by the user. Shutting down server and client connection.':

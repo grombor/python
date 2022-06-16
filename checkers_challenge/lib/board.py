@@ -1,4 +1,3 @@
-from py import log
 from .piece import Piece
 from random import randrange
 

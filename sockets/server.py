@@ -17,7 +17,7 @@ socket.listen(5)
 print("Server is running...")
 print(s.greetings())
 client_socket, client_address = socket.accept()
-print(f"Connection from {client_address[0]}:{client_address[1]} has been established.")
+print(f"Connection from {client_address[0]} has been established.")
 
 # Send greetign to the connected client
 s.handle_message(client_socket, s.greetings())
@@ -40,8 +40,8 @@ while True:
             s.handle_command(message, client_socket)
     else:
         # User message logic
-        if s.is_admin(received_msg["nickname"]):
-            print(print(f"(admin) {nickname}: {message} +"))
+        if s.is_admin(nickname):
+            print(print(f"(admin) {nickname}: {message}"))
             s.handle_message(client_socket)
         else:
             print(f"{nickname}: {message}")
