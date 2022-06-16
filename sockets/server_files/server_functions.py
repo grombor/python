@@ -1,4 +1,5 @@
 import json
+import socket
 from server_files.server_config import *
 from server_files.commands_list import get_commands_list, show_commands
 from server_files.users import Users
@@ -96,3 +97,39 @@ class Server:
         else:
             return False
 
+
+    def listen_ (self):
+        """ Main program loop """
+
+        socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        socket.bind((HOST, PORT))
+        socket.listen(5)
+
+        while True:
+            client_socket, client_address = socket.accept()
+            print(f"Connection from {client_address[0]} has been established.")
+
+            # Send greetings to the connected client
+            self.handle_message(client_socket, self.greetings())
+
+            received_msg = json.loads(client_socket.recv(HEADER_SIZE))
+            nickname = received_msg["nickname"]
+            message = received_msg["message"]
+
+            # Check is message a command
+            if message in get_commands_list().keys():
+                # Kill command logic
+                if message in ("--quit", "--stop"):
+                    self.handle_command(message, client_socket)
+                    break
+                # Other command logic
+                elif message in ("--help", "--info", "--uptime"):
+                    self.handle_command(message, client_socket)
+            else:
+                # User message logic
+                if self.is_admin(nickname):
+                    print(print(f"(admin) {nickname}: {message}"))
+                    self.handle_message(client_socket)
+                else:
+                    print(f"{nickname}: {message}")
+                    self.handle_message(client_socket)

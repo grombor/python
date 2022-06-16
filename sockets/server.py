@@ -1,52 +1,61 @@
-# Simple echo server
-import json
 import socket
-from server_files.commands_list import get_commands_list
-from server_files.server_functions import Server
-from server_files.server_config import *
+import threading
+from server_files.server_config import get_config
 
-# Variables
-msg = dict()
-s = Server()
+class Server:
+    """ Main server API class """
 
-socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-socket.bind((HOST, PORT))
-socket.listen(5)
+    # Get data from config file
+    HOST, PORT, HEADER_SIZE, CODING = get_config()
 
-# Greetings
-print("Server is running...")
-print(s.greetings())
-client_socket, client_address = socket.accept()
-print(f"Connection from {client_address[0]} has been established.")
+    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server.bind((HOST, PORT))
+    server.listen()
 
-# Send greetign to the connected client
-s.handle_message(client_socket, s.greetings())
+    # Initialize lists
+    clients = []
+    nicknames = []
 
 
-# Main server loop
-while True:
-    received_msg = json.loads(client_socket.recv(HEADER_SIZE))
-    nickname = received_msg["nickname"]
-    message = received_msg["message"]
+    def broadcast(self, message):
+        """ Send message to all clients """
 
-    # Check is message a command
-    if message in get_commands_list().keys():
-        # Kill command logic
-        if message in ("--quit", "--stop"):
-            s.handle_command(message, client_socket)
-            break
-        # Other command logic
-        elif message in ("--help", "--info", "--uptime"):
-            s.handle_command(message, client_socket)
-    else:
-        # User message logic
-        if s.is_admin(nickname):
-            print(print(f"(admin) {nickname}: {message}"))
-            s.handle_message(client_socket)
-        else:
-            print(f"{nickname}: {message}")
-            s.handle_message(client_socket)
+        print(f'message to all >> {message}')
+        for client in self.clients:
+            client.send(message.encode(self.CODING))
 
 
+    def handle_client(self, client, nickname):
+        """ Handle client connection """
+
+        while True:
+            try:
+                message = client.recv(self.HEADER_SIZE)
+                self.broadcast(f"{nickname}: {message.decode(self.CODING)}")
+            except:
+                client_index = self.clients.index(client)
+                self.clients.remove(client)
+                client.close()
+                self.broadcast(f"{client} left.")
+                nickname = self.nicknames.index(client_index)
+                print(f"{nickname} left")
+                break
 
 
+    def receive(self) -> None:
+        print(f'Server is running.')
+        while True:
+            client, address = self.server.accept()
+            print(f'connected {str(address)}')
+            client.send('--NICK'.encode(self.CODING))
+            nickname = client.recv(self.HEADER_SIZE).decode(self.CODING)
+            self.nicknames.append(nickname)
+            self.clients.append(client)
+            message = f'<< {nickname} joined >>'
+            self.broadcast(message)
+            thread = threading.Thread(target=Server().handle_client, args=(client, nickname))
+            thread.start()
+
+# Run server
+start_server = Server().receive()
+start_server()
